@@ -5,27 +5,31 @@ project:
 website:
   title: "isl_web"
   navbar:
+    search: true
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+
   sidebar:
     style: "docked"
     search: true
+    tools:
+      - icon: github
+        menu:
+          - text: Source Code
+            url: https://github.com/chadyuu/isl-web/
     contents:
-      - section: "Basics"
-        contents:
-          - index.qmd
-          - 5.resampling.qmd
-      - section: "Layout"
-        contents:
-          - index.qmd
+      - index.qmd
+      - 5.resampling.qmd
+      - 6.model-selection.qmd
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
+    link-external-icon: true
+    link-external-newwindow: true
 
 editor: visual
 

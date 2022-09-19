@@ -4,7 +4,7 @@ execute:
   cache: true
 ---
 
-# Resampling Methods
+## Resampling Methods
 
 1.  cross-validation
 2.  bootstrap
