@@ -2,4 +2,433 @@
 title: "Chapter 6: Linear Model Selection and Regularization"
 ---
 
-## test
+There are three ways to select model.
+
+-   Subset Selection
+
+-   Shrinkage (regularization): reduce variance
+
+-   Dimension Reduction
+
+## Subset Selection
+
+The exhaustive search entails computational limitations; the number of possible models grows rapidly as p increases.
+
+So we take advantage of the following stepwise selection.
+
+-   Forward Stepwise Selection
+
+-   Backward Stepwise Selection
+
+-   Hybrid Approaches of forward and backward
+
+We determine the best model based on the following statistics.
+
+-   The indirect estimates of test error by making an adjustment to the training error
+
+    -   $C_p$
+
+    -   BIC
+
+    -   adjusted $R^2$
+
+-   The direct estimate of the test error
+
+    -   cross-validated prediction error
+
+While we preferred the indirect estimate in the past with limitation of computational resources, the cross-validation prediction error obtains popularity today.
+
+### Stepwise Selection
+
+$$
+C_p = \frac{1}{n}(RSS + 2d \hat{\sigma}^2)
+$$
+
+$$
+AIC = \frac{1}{n}(RSS + 2d \hat{\sigma}^2)
+$$
+
+$$
+BIC = \frac{1}{n}(RSS + log(n) \hat{\sigma}^2)
+$$
+
+$d \hat{\sigma}^2$ is a penalty for the number of predictors.
+
+For the Gaussian model (with variance $\sigma_\epsilon ^2$ = $\hat{\sigma}_\epsilon ^2$), the AIC is equivalent to $C_p$.
+
+$$
+Adjusted R^2 = 1 - \frac{RSS/(n-d-1)}{TSS/(n-1)}
+$$
+
+$d$ is the number of variables.
+
+## Shrinkage Model
+
+-   Ridge Regression: $l_2$ penalty
+
+-   Lasso: $l_1$ penalty
+
+### Ridge Regression
+
+Instead of RSS,
+
+![](images/paste-53CDBD7C.png)
+
+the ridge regression estimates $\hat{\beta^R}$ that minimize the following function.
+
+![](images/paste-AF72813B.png)
+
+$\lambda \sum\beta_j^2$ is called a shrinkage penalty.
+
+Note that we do not impose penalty on the intercept.
+
+It is best to apply ridge regression after standardizing the predictors since the $X_j \hat{\beta}^R_{j,\lambda}$ is depend on $\lambda$ and the scaling of the other predictors.![](images/paste-420FED10.png)
+
+As $\lambda$ increases, the ridge regression leads to a **significant** reduction in the variance of the predictions at the expense of a **slight** increase in bias under some value of $\lambda$. Therefore, the shrinkage tends to generate a better fit for the test dataset than the least squares approach.
+
+The disadvantage of the ridge regression is to always include all p predictors.
+
+### The Lasso
+
+The lasso coefficients minimize the following quantity.
+
+![](images/paste-43137187.png)
+
+The $l_1$ penalty forces some of the coefficients to be exactly equal to zero.
+
+Neither ridge regression nor the lasso will universally dominate the other. The lasso outperform the ridge regression in case that a small number of the predictors are significant. However, we cannot know their significance, so cross-validation can be used to determine which approach is better.
+
+The ridge regression shrinks every dimension by the same **proportion**, whereas the lasso shrinks all coefficients toward zero by a similar **amount.**
+
+![](images/paste-10E10509.png)
+
+### How to determine $\lambda$
+
+Find $\lambda$ from the cross-validation error for each $\lambda$.
+
+## Dimension Reduction Methods
+
+### Principal Components Regression (PCR)
+
+An unsupervised method, which is not always the best to predict.
+
+1.  Recommend to standardize all the predictors since the high-variance variables tend to play a larger role .
+2.  Construct the first M principal components, $Z_1, Z_2, …, Z_M$.
+    1.  The first principal component direction is that along which the observations vary the most.
+
+    2.  The second principal component direction must be perpendicular or orthogonal to the first principal component direction. Under this constraint, it also must have largest variance.
+3.  Fit the model with the M principal components, which can avoid overfitting than the model with all p variables.
+4.  The value of M is typically chosen by cross-validation.
+
+### Partial least squares (PLS)
+
+A supervised method.
+
+1.  Standardize the p predictors.
+2.  Construct the first M principal components, $Z_1, Z_2, …, Z_M$.
+    1.  Compute the first direction $Z_1$ by setting each coefficient of X equal to those from the simple linear regression.
+
+    2.  Take residuals between actual values and $Z_1$.
+
+    3.  Compute the second direction $Z_2$ for the residuals with least squares.
+
+While PLS can reduce bias, it has the potential to increase variance. So it often performs no better than ridge regression or PCR.
+
+## Regression in High Dimensions
+
+The model with more predictors than the number of observations fits data exactly, which often leads to overfitting.
+
+Here are the workarounds.
+
+-   forward stepwise selection
+
+-   ridge regression
+
+-   the lasso
+
+-   principal components regression
+
+Also, pay attention to the interpretation. If the variables entail multicollinearity, the values of coefficients are uninterpretable.
+
+## Lab
+
+```{r}
+library(ISLR2)
+names(Hitters)
+dim(Hitters)
+sum(is.na(Hitters$Salary))
+```
+
+```{r}
+Hitters = na.omit(Hitters)
+dim(Hitters)
+```
+
+### Best subset selection
+
+```{r}
+library(leaps)
+regfit.full = regsubsets(Salary ~ ., Hitters)
+summary(regfit.full)
+```
+
+```{r}
+regfit.full = regsubsets(Salary ~ ., data = Hitters, nvmax = 19)
+reg.summary = summary(regfit.full)
+```
+
+```{r}
+names(reg.summary)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(reg.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
+plot(reg.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+```
+
+```{r}
+which.max(reg.summary$adjr2)
+```
+
+```{r}
+plot(reg.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+points(11, reg.summary$adjr2[11], col = "red", cex = 2, pch = 20)
+```
+
+```{r}
+plot(reg.summary$cp, xlab = "Number of Variables", ylab = "Cp", type = "l")
+points(which.min(reg.summary$cp), reg.summary$cp[which.min(reg.summary$cp)], col = "red", cex = 2, pch = 20)
+```
+
+```{r}
+plot(reg.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = "l")
+points(which.min(reg.summary$bic), reg.summary$bic[which.min(reg.summary$bic)], col = "red", cex = 2, pch = 20)
+```
+
+```{r}
+plot(regfit.full, scale = "r2")
+plot(regfit.full, scale = "adjr2")
+plot(regfit.full, scale = "Cp")
+plot(regfit.full, scale = "bic")
+```
+
+### Forward and Backward Stepwise Selection
+
+```{r}
+regfit.fwd = regsubsets(Salary ~ ., data = Hitters, nvmax = 19, method = "forward")
+summary(regfit.fwd)
+```
+
+```{r}
+regfit.bwd = regsubsets(Salary ~ ., data = Hitters, nvmax = 19, method = "backward")
+summary(regfit.bwd)
+```
+
+### Cross-validation
+
+```{r}
+set.seed(1)
+train = sample(c(TRUE, FALSE), nrow(Hitters), replace = TRUE)
+test = (!train)
+```
+
+```{r}
+regfit.best = regsubsets(Salary ~ ., data = Hitters[train, ], nvmax = 19)
+```
+
+```{r}
+test.mat = model.matrix(Salary ~ ., data = Hitters[test, ])
+```
+
+```{r}
+val.errors = rep(NA, 19)
+for(i in 1:19){
+  coefi = coef(regfit.best, id = i)
+  pred = test.mat[, names(coefi)] %*% coefi
+  val.errors[i] = mean((Hitters$Salary[test] - pred)^2)
+}
+```
+
+```{r}
+coef(regfit.best, which.min(val.errors))
+```
+
+```{r}
+predict.regsubsets = function(object, newdata, id){
+  form = as.formula(object$call[[2]])
+  mat = model.matrix(form, newdata)
+  coefi = coef(object, id = id)
+  xvars = names(coefi)
+  mat[, xvars] %*% coefi
+}
+```
+
+```{r}
+regfit.best = regsubsets(Salary ~ ., data = Hitters, nvmax = 19)
+coef(regfit.best, 7)
+```
+
+```{r}
+k = 10
+n = nrow(Hitters)
+set.seed(1)
+folds = sample(rep(1:k, length = n))
+cv.errors = matrix(NA, k, 19, dimnames = list(NULL, paste(1:19)))
+```
+
+```{r}
+for(j in 1:k){
+  best.fit = regsubsets(Salary ~ ., data = Hitters[folds != j,], nvmax = 19)
+  for (i in 1:19){
+    pred = predict(best.fit, Hitters[folds ==j, ], id = i)
+    cv.errors[j, i] = mean((Hitters$Salary[folds == j] - pred)^2)
+  }
+}
+```
+
+```{r}
+mean.cv.errors = apply(cv.errors, 2, mean)
+mean.cv.errors
+```
+
+```{r}
+par(mfrow = c(1,1))
+plot(mean.cv.errors, type = "b")
+```
+
+We found a 10-variable model is the best through cross-validation.
+
+### Ridge Regression
+
+```{r}
+x = model.matrix(Salary ~ ., Hitters)[, -1]
+y = Hitters$Salary
+```
+
+```{r}
+library(glmnet)
+grid = 10^seq(10, -2, length = 100)
+ridge.mod = glmnet(x, y, alpha = 0, lambda = grid)
+```
+
+```{r}
+ridge.mod$lambda[50]
+coef(ridge.mod)[, 50]
+```
+
+```{r}
+predict(ridge.mod, s = 50, type = "coefficients") # lambda = 50
+```
+
+```{r}
+set.seed(1)
+train = sample(1:nrow(x), nrow(x) / 2)
+test = (-train)
+y.test = y[test]
+```
+
+```{r}
+ridge.mod = glmnet(x[train, ], y[train], alpha = 0, lambda = grid, thresh = 1e-12)
+ridge.pred = predict(ridge.mod, s = 4, newx = x[test, ])
+mean((ridge.pred - y.test)^2)
+```
+
+```{r}
+set.seed(1)
+cv.out = cv.glmnet(x[train, ], y[train], alpha = 0)
+plot(cv.out)
+```
+
+```{r}
+bestlam = cv.out$lambda.min
+bestlam
+```
+
+```{r}
+ridge.pred = predict(ridge.mod, s = bestlam, newx = x[test, ])
+mean((ridge.pred - y.test)^2)
+```
+
+```{r}
+out = glmnet(x, y, alpha = 0)
+predict(out, type = "coefficients", s = bestlam)[1:20, ]
+```
+
+### The Lasso
+
+```{r}
+lasso.mod = glmnet(x[train, ], y[train], alpha = 1, lambda = grid)
+plot(lasso.mod)
+```
+
+```{r}
+set.seed(1)
+cv.out = cv.glmnet(x[train, ], y[train], alpha = 1)
+plot(cv.out)
+```
+
+```{r}
+bestlam = cv.out$lambda.min
+lasso.pred = predict(lasso.mod, s = bestlam, newx = x[test, ])
+mean((lasso.pred -y.test)^2)
+```
+
+```{r}
+out = glmnet(x, y, alpha = 1, lambda = grid)
+predict(out, type = "coefficients", s = bestlam)[1:20, ]
+```
+
+### PCR regression
+
+```{r}
+library(pls)
+set.seed(2)
+pcr.fit = pcr(Salary ~ ., data = Hitters, scale = TRUE, validation = "CV") # ten-fold cross-validation
+```
+
+```{r}
+summary(pcr.fit)
+```
+
+```{r}
+validationplot(pcr.fit, val.type = "MSEP") # cross-validation MSE to be plotted
+```
+
+```{r}
+set.seed(1)
+pcr.fit = pcr(Salary ~ ., data = Hitters, subset = train, scale = TRUE, validation = "CV")
+validationplot(pcr.fit, val.type = "MSEP")
+```
+
+```{r}
+pcr.pred = predict(pcr.fit, x[test, ], ncomp = 5)
+mean((pcr.pred - y.test)^2)
+```
+
+```{r}
+pcr.fit = pcr(y ~ x, scale = TRUE, ncomp = 5)
+summary(pcr.fit)
+```
+
+### Partial Least Squares
+
+```{r}
+set.seed(1)
+pls.fit = plsr(Salary ~ ., data = Hitters, subset = train, scale = TRUE, validation = "CV")
+summary(pls.fit)
+```
+
+```{r}
+validationplot(pls.fit, val.type = "MSEP")
+```
+
+```{r}
+pls.pred = predict(pls.fit, x[test, ], ncomp = 1)
+mean((pls.pred - y.test)^2)
+```
+
+```{r}
+pls.fit = plsr(Salary ~ ., data = Hitters, scale = TRUE, ncomp = 1)
+summary(pls.fit)
+```
