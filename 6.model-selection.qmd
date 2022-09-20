@@ -1,5 +1,7 @@
 ---
 title: "Chapter 6: Linear Model Selection and Regularization"
+execute:
+  cache: true
 ---
 
 There are three ways to select model.
