@@ -215,14 +215,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#bagging" id="toc-bagging" class="nav-link" data-scroll-target="#bagging">Bagging</a></li>
   <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests">Random Forests</a></li>
-  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting">Boosting</a></li>
+  <li><a href="#boosting-gradient-boosting-machine-gbm" id="toc-boosting-gradient-boosting-machine-gbm" class="nav-link" data-scroll-target="#boosting-gradient-boosting-machine-gbm">Boosting (Gradient Boosting Machine: GBM)</a>
+  <ul class="collapse">
+  <li><a href="#random-forest-vs.-boosting" id="toc-random-forest-vs.-boosting" class="nav-link" data-scroll-target="#random-forest-vs.-boosting">Random Forest vs.&nbsp;Boosting</a></li>
+  </ul></li>
   <li><a href="#bayesian-additive-regression-trees-bart" id="toc-bayesian-additive-regression-trees-bart" class="nav-link" data-scroll-target="#bayesian-additive-regression-trees-bart">Bayesian Additive Regression Trees (BART)</a></li>
   <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
   <ul class="collapse">
   <li><a href="#fitting-classification-trees" id="toc-fitting-classification-trees" class="nav-link" data-scroll-target="#fitting-classification-trees">Fitting Classification Trees</a></li>
   <li><a href="#fitting-regression-trees" id="toc-fitting-regression-trees" class="nav-link" data-scroll-target="#fitting-regression-trees">Fitting Regression Trees</a></li>
   <li><a href="#bagging-and-random-forests" id="toc-bagging-and-random-forests" class="nav-link" data-scroll-target="#bagging-and-random-forests">Bagging and Random Forests</a></li>
-  <li><a href="#boosting-1" id="toc-boosting-1" class="nav-link" data-scroll-target="#boosting-1">Boosting</a></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting">Boosting</a></li>
   <li><a href="#bayesian-additive-regression-trees" id="toc-bayesian-additive-regression-trees" class="nav-link" data-scroll-target="#bayesian-additive-regression-trees">Bayesian Additive Regression Trees</a></li>
   </ul></li>
   </ul>
@@ -247,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>The tree-based methods are useful for interpretation but not competitive in prediction.</p>
+<p>The tree-based methods are <strong>useful for interpretation</strong> but <strong>not competitive in prediction</strong>.</p>
 <ul>
 <li>bagging</li>
 <li>random forests</li>
@@ -315,7 +318,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Average all the predictions.</p></li>
 </ul>
 <p>Averaging a set of observations reduces variance. Given <span class="math inline">\(Z_1, …, Z_n\)</span>, each with variance <span class="math inline">\(\sigma^2\)</span>, the variance of <span class="math inline">\(\bar{Z}\)</span> is <span class="math inline">\(\sigma^2/n\)</span>.</p>
-<p>Out-of-Bag error estimation is a very straightforward way to estimate test error without the nee to perform cross-validation.</p>
+<p>Out-of-Bag error estimation is a very straightforward way to estimate test error without the need to perform cross-validation.</p>
 <ul>
 <li><p>Predict the response for Out-of-bag (OOB) observations not used to fit a given bagged tree.</p></li>
 <li><p>Average the predictions and compute overall OOB MSE or classification error, which is valid estimates of the test error.</p></li>
@@ -327,8 +330,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
 <p>Random forests forces each split to consider only a random subset of the predictors. (Typically, we choose <span class="math inline">\(m = \sqrt{p}\)</span>.) This make the average of the resulting trees less variable and more reliable.</p>
 </section>
-<section id="boosting" class="level2">
-<h2 class="anchored" data-anchor-id="boosting">Boosting</h2>
+<section id="boosting-gradient-boosting-machine-gbm" class="level2">
+<h2 class="anchored" data-anchor-id="boosting-gradient-boosting-machine-gbm">Boosting (Gradient Boosting Machine: GBM)</h2>
 <p>In boosting, the trees are grown sequentially.</p>
 <ul>
 <li><p>Set <span class="math inline">\(\hat{f}(x) = 0\)</span> and <span class="math inline">\(r_i = y_i\)</span>.</p></li>
@@ -340,6 +343,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Boosting can overfit if B is too large.</p>
 <p>Typical values of <span class="math inline">\(\lambda\)</span> is 0.01 or 0.001.</p>
 <p>The number of splits often <span class="math inline">\(d = 1\)</span>.</p>
+<section id="random-forest-vs.-boosting" class="level3">
+<h3 class="anchored" data-anchor-id="random-forest-vs.-boosting">Random Forest vs.&nbsp;Boosting</h3>
+<p>Random Forest has less number of tuning parameters. With proper tuning, boosting can perform better than random forest.</p>
+</section>
 </section>
 <section id="bayesian-additive-regression-trees-bart" class="level2">
 <h2 class="anchored" data-anchor-id="bayesian-additive-regression-trees-bart">Bayesian Additive Regression Trees (BART)</h2>
@@ -634,20 +641,119 @@ Distribution of residuals:
 <pre><code>[1] 35.28688</code></pre>
 </div>
 </div>
+<section id="rpart" class="level4">
+<h4 class="anchored" data-anchor-id="rpart">rpart</h4>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-23_b9c8121542e8bb642d4b4fc6c2d1daf7">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>tr1 <span class="ot">=</span> <span class="fu">rpart</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tr1)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(tr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>cross-validation for pruning.</p>
+<p><code>CP</code>: scaled <span class="math inline">\(\alpha\)</span>.</p>
+<p>Instead of <span class="math inline">\(RSS(T) + \alpha |T|\)</span>, <code>rpart</code> uses <span class="math inline">\(\frac{RSS(T)}{RSS(root)} + CP \cdot |T|\)</span>.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-24_f640b3967bc76da0049533e1672e6a54">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">printcp</span>(tr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Regression tree:
+rpart(formula = medv ~ ., data = Boston)
+
+Variables actually used in tree construction:
+[1] crim  dis   lstat rm   
+
+Root node error: 42716/506 = 84.42
+
+n= 506 
+
+        CP nsplit rel error  xerror     xstd
+1 0.452744      0   1.00000 1.00324 0.082971
+2 0.171172      1   0.54726 0.64125 0.057921
+3 0.071658      2   0.37608 0.43009 0.047418
+4 0.036164      3   0.30443 0.33278 0.041968
+5 0.033369      4   0.26826 0.32456 0.042045
+6 0.026613      5   0.23489 0.31425 0.041927
+7 0.015851      6   0.20828 0.28420 0.039942
+8 0.010000      7   0.19243 0.27750 0.040652</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-25_746cd9444c2780eaf8c1ad6e2b7ec894">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>tr1<span class="sc">$</span>cptable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          CP nsplit rel error    xerror       xstd
+1 0.45274420      0 1.0000000 1.0032418 0.08297088
+2 0.17117244      1 0.5472558 0.6412460 0.05792114
+3 0.07165784      2 0.3760834 0.4300911 0.04741826
+4 0.03616428      3 0.3044255 0.3327752 0.04196756
+5 0.03336923      4 0.2682612 0.3245644 0.04204536
+6 0.02661300      5 0.2348920 0.3142473 0.04192687
+7 0.01585116      6 0.2082790 0.2841993 0.03994168
+8 0.01000000      7 0.1924279 0.2774985 0.04065244</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-26_79dd7f06bc4967cf754a62df7511e29a">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(tr1<span class="sc">$</span>cptable[, <span class="dv">1</span>], <span class="fu">c</span>(<span class="sc">-</span><span class="fu">diff</span>(tr1<span class="sc">$</span>cptable[, <span class="dv">3</span>]), <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        [,1]       [,2]
+1 0.45274420 0.45274420
+2 0.17117244 0.17117244
+3 0.07165784 0.07165784
+4 0.03616428 0.03616428
+5 0.03336923 0.03336923
+6 0.02661300 0.02661300
+7 0.01585116 0.01585116
+8 0.01000000 0.00000000</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-27_e1eff1284fad4643c91151a9c48c9758">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prune</span>(tr1, <span class="at">cp=</span><span class="fl">0.3</span>) <span class="co"># only 1 split</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>n= 506 
+
+node), split, n, deviance, yval
+      * denotes terminal node
+
+1) root 506 42716.300 22.53281  
+  2) rm&lt; 6.941 430 17317.320 19.93372 *
+  3) rm&gt;=6.941 76  6059.419 37.23816 *</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-28_c1e177c8bce1a07d6a9d9419fd1af2ee">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prune</span>(tr1, <span class="at">cp=</span><span class="fl">0.1</span>) <span class="co"># 2 splits</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>n= 506 
+
+node), split, n, deviance, yval
+      * denotes terminal node
+
+1) root 506 42716.300 22.53281  
+  2) rm&lt; 6.941 430 17317.320 19.93372  
+    4) lstat&gt;=14.4 175  3373.251 14.95600 *
+    5) lstat&lt; 14.4 255  6632.217 23.34980 *
+  3) rm&gt;=6.941 76  6059.419 37.23816 *</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-29_6b35517d86603ac5ac04f95a4841f38a">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotcp</span>(tr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 <section id="bagging-and-random-forests" class="level3">
 <h3 class="anchored" data-anchor-id="bagging-and-random-forests">Bagging and Random Forests</h3>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-23_878a03ccfb901b3560bd44cfbcadb996">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>randomForest 4.7-1.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Type rfNews() to see new features/changes/bug fixes.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>bag.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston, <span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">12</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>bag.boston</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-30_985597b950ee8fb233c27e436f37b17a">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>bag.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston, <span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">12</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>bag.boston</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -661,43 +767,44 @@ No. of variables tried at each split: 12
 </div>
 </div>
 <p><code>mtry</code> indicates the number of predictors to be considered for each split.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-24_2e81e0f76dbd80c68df791699b370ebc">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>yhat.bag <span class="ot">&lt;-</span> <span class="fu">predict</span>(bag.boston , <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(yhat.bag , boston.test)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span> (<span class="dv">0</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-31_198ddd9e5ec2e8dd4bbf40d4eee44347">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>yhat.bag <span class="ot">&lt;-</span> <span class="fu">predict</span>(bag.boston , <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(yhat.bag , boston.test)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span> (<span class="dv">0</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="8.tree-based_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-25_df41ae4879ad5fb125e7f00ff0a9607c">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.bag <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-32_e6462edc3596ed523cfb9b07f6ace56c">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.bag <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 23.41916</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-26_27ea11a7ee19661d7680df18b2742e0f">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>bag.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston ,</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">12</span>, <span class="at">ntree =</span> <span class="dv">25</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>yhat.bag <span class="ot">&lt;-</span> <span class="fu">predict</span>(bag.boston , <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.bag <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-33_efd63c2c3fd943886e9dd574c5b99bf3">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>bag.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston ,</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">12</span>, <span class="at">ntree =</span> <span class="dv">25</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>yhat.bag <span class="ot">&lt;-</span> <span class="fu">predict</span>(bag.boston , <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.bag <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 25.75055</code></pre>
 </div>
 </div>
 <p><code>ntree</code> indicates the number of trees.</p>
 <p>To conduct random forest, we set <code>mtry</code> less than the number of variables.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-27_a6fdb7efe671729c971a492f25e5ee8d">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>rf.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston,</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">6</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>yhat.rf <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf.boston, <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.rf <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-34_10c9947bde77bc312a913fe70e2499f7">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>rf.boston <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">subset =</span> train , <span class="at">mtry =</span> <span class="dv">6</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>yhat.rf <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf.boston, <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ])</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.rf <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 20.06644</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-28_689fe752583027b8f8e547e10f89e7f8">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(rf.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The prediction and error rate returned by randomForest are calculated based on OOB.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-35_055cb0b66c03928026a4e168278045ae">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(rf.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          %IncMSE IncNodePurity
 crim    19.435587    1070.42307
@@ -714,32 +821,29 @@ ptratio  8.612780     902.20190
 lstat   28.725343    5813.04833</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-29_6875e47d84ba9be96d86c64f8b38d073">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-36_30821f719ad91469be315b83266be0f8">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(rf.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="8.tree-based_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><code>%IncMSE</code> indicates the increase in MSE for regression / error rate for classification, when a given variable is not available (or permuted). In this case, <code>lstat</code> and <code>rm</code> are by far the two more important variables.</p>
 </section>
-<section id="boosting-1" class="level3">
-<h3 class="anchored" data-anchor-id="boosting-1">Boosting</h3>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-30_03ebcee2bc06b1f88368de61f1e04789">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loaded gbm 2.1.8.1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>boost.boston <span class="ot">&lt;-</span> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">5000</span>,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">interaction.depth =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="boosting" class="level3">
+<h3 class="anchored" data-anchor-id="boosting">Boosting</h3>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-37_aa2869c314f1f77c4a47efca002d1c1e">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>boost.boston <span class="ot">&lt;-</span> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">5000</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">interaction.depth =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We set <code>distribution</code> as <code>"gaussian"</code> for a regression problem and <code>"bernoulli"</code> for a binary classification problem.</p>
 <p><code>interaction.depth</code> limits the depth of each tree.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-31_1ddff91a4c7a0c81122b55a5025c2b0d">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boost.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-38_6d2fc5cad9bce1728d475ea0bb5279d9">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(boost.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="8.tree-based_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            var     rel.inf
@@ -758,59 +862,70 @@ chas       chas  0.09671228</code></pre>
 </div>
 </div>
 <p>Below show partial dependence plots, illustrating the marginal effect of the selected variables on the response after integrating out the other variables.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-32_c87f9b8f0c7ebe6b15b97bbea65dcf35">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boost.boston , <span class="at">i =</span> <span class="st">"rm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-39_66926aa6e01d683a8e0a2d189dc92eef">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boost.boston , <span class="at">i =</span> <span class="st">"rm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="8.tree-based_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boost.boston , <span class="at">i =</span> <span class="st">"lstat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(boost.boston , <span class="at">i =</span> <span class="st">"lstat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="8.tree-based_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-33_593600c79a3eba172668f597fe8bd005">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>yhat.boost <span class="ot">&lt;-</span> <span class="fu">predict</span>(boost.boston,</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ], <span class="at">n.trees =</span> <span class="dv">5000</span>)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.boost <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-40_519520922e476fee109d88cb790c8dbf">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>yhat.boost <span class="ot">&lt;-</span> <span class="fu">predict</span>(boost.boston,</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ], <span class="at">n.trees =</span> <span class="dv">5000</span>)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.boost <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 18.39057</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-34_41f7268a0c9d2f5648a255c6fae55d3d">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>boost.boston <span class="ot">&lt;-</span> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">5000</span>,</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">interaction.depth =</span> <span class="dv">4</span>, <span class="at">shrinkage =</span> <span class="fl">0.2</span>, <span class="at">verbose =</span> F)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>yhat.boost <span class="ot">&lt;-</span> <span class="fu">predict</span>(boost.boston ,</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ], <span class="at">n.trees =</span> <span class="dv">5000</span>)</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.boost <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-41_79ea01d837f40ab39bda11bf97cf7cc1">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>boost.boston <span class="ot">&lt;-</span> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">5000</span>,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">interaction.depth =</span> <span class="dv">4</span>, <span class="at">shrinkage =</span> <span class="fl">0.2</span>, <span class="at">verbose =</span> F)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>yhat.boost <span class="ot">&lt;-</span> <span class="fu">predict</span>(boost.boston ,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> Boston[<span class="sc">-</span>train , ], <span class="at">n.trees =</span> <span class="dv">5000</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( yhat.boost <span class="sc">-</span> boston.test)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 16.54778</code></pre>
 </div>
 </div>
 <p><code>shrinkage</code> is the value of the shrinkage parameter <span class="math inline">\(\lambda\)</span> with 0.001 as default. In this case, <span class="math inline">\(\lambda=0.2\)</span> produces a lower test MSE.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-42_e8d2feab9ad683e8dee1b2693ea55d7b">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gbm.perf</span>(boost.boston)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>OOB generally underestimates the optimal number of iterations although predictive performance is reasonably competitive. Using cv_folds&gt;1 when calling gbm usually results in improved predictive performance.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="8.tree-based_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100
+attr(,"smoother")
+Call:
+loess(formula = object$oobag.improve ~ x, enp.target = min(max(4, 
+    length(x)/10), 50))
+
+Number of Observations: 5000 
+Equivalent Number of Parameters: 39.99 
+Residual Standard Error: 0.3387 </code></pre>
+</div>
+</div>
 </section>
 <section id="bayesian-additive-regression-trees" class="level3">
 <h3 class="anchored" data-anchor-id="bayesian-additive-regression-trees">Bayesian Additive Regression Trees</h3>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-35_81b1127a8416b7f3b8655242865caa88">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BART)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: nlme</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: nnet</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: survival</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> Boston[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Boston[, <span class="st">"medv"</span>]</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>xtrain <span class="ot">&lt;-</span> x[train, ]</span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>ytrain <span class="ot">&lt;-</span> y[train]</span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> x[<span class="sc">-</span>train, ]</span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> y[<span class="sc">-</span>train]</span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>bartfit <span class="ot">&lt;-</span> <span class="fu">gbart</span>(xtrain , ytrain , <span class="at">x.test =</span> xtest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-43_068205bc9fe238442749a0668aae8b07">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BART)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> Boston[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Boston[, <span class="st">"medv"</span>]</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>xtrain <span class="ot">&lt;-</span> x[train, ]</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>ytrain <span class="ot">&lt;-</span> y[train]</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> x[<span class="sc">-</span>train, ]</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> y[<span class="sc">-</span>train]</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>bartfit <span class="ot">&lt;-</span> <span class="fu">gbart</span>(xtrain , ytrain , <span class="at">x.test =</span> xtest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>*****Calling gbart: type=1
 *****Data:
@@ -843,17 +958,17 @@ time: 3s
 trcnt,tecnt: 1000,1000</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-36_4670496a4a193a36ea15e7708d117647">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>yhat.bart <span class="ot">&lt;-</span> bartfit<span class="sc">$</span>yhat.test.mean</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( ytest <span class="sc">-</span> yhat.bart)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-44_e0bcb3b5b0b559e89edba6a84840b527">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>yhat.bart <span class="ot">&lt;-</span> bartfit<span class="sc">$</span>yhat.test.mean</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( ytest <span class="sc">-</span> yhat.bart)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.94718</code></pre>
 </div>
 </div>
 <p>We can check how many times each variable appeared in the collection of trees.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-37_42d40237dc591d89d494c66cb5291cba">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(bartfit<span class="sc">$</span>varcount.mean , <span class="at">decreasing =</span> T)</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>bartfit<span class="sc">$</span>varcount.mean[ord]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-45_21f2471de9a5fde087c1b88bbc2690d1">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(bartfit<span class="sc">$</span>varcount.mean , <span class="at">decreasing =</span> T)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>bartfit<span class="sc">$</span>varcount.mean[ord]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    nox   lstat     tax     rad      rm   indus    chas ptratio     age      zn 
  22.952  21.329  21.250  20.781  19.890  19.825  19.051  18.976  18.274  15.952 

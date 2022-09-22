@@ -4,7 +4,7 @@ execute:
   cache: true
 ---
 
-The tree-based methods are useful for interpretation but not competitive in prediction.
+The tree-based methods are **useful for interpretation** but **not competitive in prediction**.
 
 -   bagging
 -   random forests
@@ -86,7 +86,7 @@ Bagging is the method with the following steps.
 
 Averaging a set of observations reduces variance. Given $Z_1, …, Z_n$, each with variance $\sigma^2$, the variance of $\bar{Z}$ is $\sigma^2/n$.
 
-Out-of-Bag error estimation is a very straightforward way to estimate test error without the nee to perform cross-validation.
+Out-of-Bag error estimation is a very straightforward way to estimate test error without the need to perform cross-validation.
 
 -   Predict the response for Out-of-bag (OOB) observations not used to fit a given bagged tree.
 
@@ -100,7 +100,7 @@ Bagging can get caught in local optima.
 
 Random forests forces each split to consider only a random subset of the predictors. (Typically, we choose $m = \sqrt{p}$.) This make the average of the resulting trees less variable and more reliable.
 
-## Boosting
+## Boosting (Gradient Boosting Machine: GBM)
 
 In boosting, the trees are grown sequentially.
 
@@ -119,6 +119,10 @@ Boosting can overfit if B is too large.
 Typical values of $\lambda$ is 0.01 or 0.001.
 
 The number of splits often $d = 1$.
+
+### Random Forest vs. Boosting
+
+Random Forest has less number of tuning parameters. With proper tuning, boosting can perform better than random forest.
 
 ## Bayesian Additive Regression Trees (BART)
 
@@ -289,6 +293,48 @@ abline (0, 1)
 mean (( yhat - boston.test)^2)
 ```
 
+#### rpart
+
+```{r}
+library(rpart)
+library(rpart.plot)
+set.seed(1234)
+tr1 = rpart(medv ~ ., data = Boston)
+par(mfrow=c(1,2))
+plot(tr1)
+rpart.plot(tr1)
+```
+
+cross-validation for pruning.
+
+`CP`: scaled $\alpha$.
+
+Instead of $RSS(T) + \alpha |T|$, `rpart` uses $\frac{RSS(T)}{RSS(root)} + CP \cdot |T|$.
+
+```{r}
+printcp(tr1)
+```
+
+```{r}
+tr1$cptable
+```
+
+```{r}
+cbind(tr1$cptable[, 1], c(-diff(tr1$cptable[, 3]), 0))
+```
+
+```{r}
+prune(tr1, cp=0.3) # only 1 split
+```
+
+```{r}
+prune(tr1, cp=0.1) # 2 splits
+```
+
+```{r}
+plotcp(tr1)
+```
+
 ### Bagging and Random Forests
 
 ```{r}
@@ -328,6 +374,8 @@ rf.boston <- randomForest(medv ~ ., data = Boston,
 yhat.rf <- predict(rf.boston, newdata = Boston[-train , ])
 mean (( yhat.rf - boston.test)^2)
 ```
+
+The prediction and error rate returned by randomForest are calculated based on OOB.
 
 ```{r}
 importance(rf.boston)
@@ -381,6 +429,10 @@ mean (( yhat.boost - boston.test)^2)
 ```
 
 `shrinkage` is the value of the shrinkage parameter $\lambda$ with 0.001 as default. In this case, $\lambda=0.2$ produces a lower test MSE.
+
+```{r}
+gbm.perf(boost.boston)
+```
 
 ### Bayesian Additive Regression Trees
 
