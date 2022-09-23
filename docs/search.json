@@ -152,5 +152,61 @@
     "title": "Chapter 8: Tree-Based Methods",
     "section": "Boosting (Gradient Boosting Machine: GBM)",
     "text": "Boosting (Gradient Boosting Machine: GBM)\nIn boosting, the trees are grown sequentially.\n\nSet \\(\\hat{f}(x) = 0\\) and \\(r_i = y_i\\).\nGiven the current model, fit a decision tree to the residuals from the model as \\(\\hat{f}^b(x)\\) with d splits.\nAdd this new decision tree into the fitted function to update the residuals. \\(\\hat{f}(x) \\leftarrow \\hat{f}(x) + \\lambda \\hat{f}^b(x)\\).\nUpdate the residuals. \\(r_i \\leftarrow r_i - \\lambda \\hat{f}^b(x_i)\\).\nOutput the boosted model. \\(\\hat{f}(x) = \\sum_{b=1}^{B} \\lambda \\hat{f}^b(x)\\).\n\nBoosting can overfit if B is too large.\nTypical values of \\(\\lambda\\) is 0.01 or 0.001.\nThe number of splits often \\(d = 1\\).\n\nRandom Forest vs. Boosting\nRandom Forest has less number of tuning parameters. With proper tuning, boosting can perform better than random forest."
+  },
+  {
+    "objectID": "7.beyond-linearity.html",
+    "href": "7.beyond-linearity.html",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "",
+    "text": "Polynomial regression\nStep functions\nRegression splines\nSmoothing splines\nLocal regression\nGeneralized additive models"
+  },
+  {
+    "objectID": "7.beyond-linearity.html#basis-functions",
+    "href": "7.beyond-linearity.html#basis-functions",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Basis Functions",
+    "text": "Basis Functions\nPolynomial and piecewise-constant regression models are in fact special cases of a basis function approach, a family of functions or transformations that can be applied to a variable.\n\nHence, we can use least squares."
+  },
+  {
+    "objectID": "7.beyond-linearity.html#polynomial-regression",
+    "href": "7.beyond-linearity.html#polynomial-regression",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Polynomial Regression",
+    "text": "Polynomial Regression"
+  },
+  {
+    "objectID": "7.beyond-linearity.html#step-functions",
+    "href": "7.beyond-linearity.html#step-functions",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Step Functions",
+    "text": "Step Functions\nBreak the range of X into bins to convert a continuous variable into an ordered categorical variable."
+  },
+  {
+    "objectID": "7.beyond-linearity.html#regression-splines",
+    "href": "7.beyond-linearity.html#regression-splines",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Regression Splines",
+    "text": "Regression Splines\n\nPiecewise Polynomials\n\nThe problem is the function is discontinuous around knots.\n\n\nConstraints and Splines\nConstraints:\n\nthe fitted curve must be continuous.\nBoth the first and second derivatives of the piecewise polynomials are continuous at knots ( except a linear spline).\n\n\n\nThe Spline Basis Representation\n\nE.g., for a cubic polynomial, add one truncated power basis function per knot as follows.\n\nwhere \\(\\xi\\) is the knot.\nThen, the first and second derivatives at each of the knots will remain continuous.\nThe number of predictors is $3+K$, i.e., \\(X, X^2, X^3, h(X,\\xi_1), h(X,\\xi+2),...,h(X,\\xi_K)\\).\nWith the intercept in addition to these predictors, the number of coefficients is \\(K+4\\), i.e., \\(K+4\\) degrees of freedom.\nSplines can have high variance at the outer range of the predictors.\n\n\nChoosing the Number and Locations of the Knots\nIn practice, it is common to place knots in a uniform fashion.\nTo determine the number of knots or degrees of freedom, cross-validation works well.\n\n\nComparison to Polynomial Regression\nRegression splines often give superior results to polynomial regression. Regression splines, which increase the number of knots but keep the degree fixed, produce more stable estimates."
+  },
+  {
+    "objectID": "7.beyond-linearity.html#smoothing-splines",
+    "href": "7.beyond-linearity.html#smoothing-splines",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Smoothing Splines",
+    "text": "Smoothing Splines\nThe function g that minimizes the following value is called smoothing splines, which makes RSS small but also the regression line smooth.\n\nwhere \\(\\lambda\\) is nonnegative.\nIf \\(\\lambda \\rightarrow \\infty\\), the regression line becomes a straight line.\nSmoothing splines is a shrunken version of a natural cubic spline with the region outside of the extreme knots perfectly linear.\n\nChoosing the Smoothing Parameter \\(\\lambda\\)\nDegrees of freedom: the number of free parameters\nEffective degrees of freedom \\(df_\\lambda\\): a measure of the flexibility of the smoothing spline.\n\\[\n\\hat{g}_\\lambda = S_\\lambda y\n\\]\n\\(\\hat{g}_\\lambda\\) indicates the fitted value of the smoothing spline.\n\\(S_\\lambda\\) is an n x n matrix.\nThen, the effective degrees of freedom is defined as\n\\[\ndf_\\lambda = \\sum_{i=1}^{n} \\{S_\\lambda\\}_{ii}\n\\]\nTo choose \\(\\lambda\\), cross-validation works. Especially, LOOCV can be computed very efficiently for smoothing splines.\n\n\\(\\hat{g}_\\lambda ^{(-i)}(x_i)\\) indicates the fitted value for the smoothing spline evaluated at \\(x_i\\), where the fit uses all the training data except for the ith observation."
+  },
+  {
+    "objectID": "7.beyond-linearity.html#local-regression",
+    "href": "7.beyond-linearity.html#local-regression",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Local Regression",
+    "text": "Local Regression\nFit a target point \\(x_0\\) using only the nearby training observations.\n\nGather the fraction \\(s=k/n\\) of training points whose \\(x_i\\) are closest to \\(x_0\\).\nAssign a weight \\(K_{i0} = K(x_i, x_0)\\) to each point, so that the point furthest from \\(x_0\\) has weight zero and the closest has the highest weight.\nFit a weighted least squares regression:\n\n\n\nThe fitted value at \\(x_0\\) is give by \\(\\hat{f}(x0) = \\hat{\\beta_0} + \\hat{\\beta_1} x_0\\).\n\nThe span s plays a significant role to determine smoothness. The larger s will lead to a global filt to the data using all of the training data.\nTo choose s, cross-validation works."
+  },
+  {
+    "objectID": "7.beyond-linearity.html#generalized-additive-models-gam",
+    "href": "7.beyond-linearity.html#generalized-additive-models-gam",
+    "title": "Chapter 7: Moving Beyond Linearity",
+    "section": "Generalized Additive Models (GAM)",
+    "text": "Generalized Additive Models (GAM)\nQuantitive Regression\n\nQualitative Classification"
   }
 ]

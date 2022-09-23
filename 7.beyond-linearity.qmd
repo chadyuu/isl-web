@@ -1,0 +1,389 @@
+---
+title: "Chapter 7: Moving Beyond Linearity"
+execute:
+  cache: true
+---
+
+-   Polynomial regression
+
+-   Step functions
+
+-   Regression splines
+
+-   Smoothing splines
+
+-   Local regression
+
+-   Generalized additive models
+
+## Basis Functions
+
+Polynomial and piecewise-constant regression models are in fact special cases of a basis function approach, a family of functions or transformations that can be applied to a variable.
+
+![](images/paste-3F79A37A.png)
+
+Hence, we can use least squares.
+
+## Polynomial Regression
+
+![](images/paste-C209BED3.png)
+
+## Step Functions
+
+Break the range of X into bins to convert a continuous variable into an ordered categorical variable.
+
+![](images/paste-C6B9F224.png)
+
+![](images/paste-D063957B.png)
+
+## Regression Splines
+
+### Piecewise Polynomials
+
+![](images/paste-941B6D13.png)
+
+The problem is the function is discontinuous around knots.
+
+### Constraints and Splines
+
+Constraints:
+
+-   the fitted curve must be continuous.
+
+-   Both the first and second derivatives of the piecewise polynomials are continuous at knots ( except a linear spline).
+
+### The Spline Basis Representation
+
+![](images/paste-60565231.png)
+
+E.g., for a cubic polynomial, add one truncated power basis function per knot as follows.
+
+![](images/paste-24417184.png)
+
+where $\xi$ is the knot.
+
+Then, the first and second derivatives at each of the knots will remain continuous.
+
+The number of predictors is \$3+K\$, i.e., $X, X^2, X^3, h(X,\xi_1), h(X,\xi+2),...,h(X,\xi_K)$.
+
+With the intercept in addition to these predictors, the number of coefficients is $K+4$, i.e., $K+4$ degrees of freedom.
+
+Splines can have high variance at the outer range of the predictors.
+
+### Choosing the Number and Locations of the Knots
+
+In practice, it is common to place knots in a uniform fashion.
+
+To determine the number of knots or degrees of freedom, cross-validation works well.
+
+### Comparison to Polynomial Regression
+
+Regression splines often give superior results to polynomial regression. Regression splines, which increase the number of knots but keep the degree fixed, produce more stable estimates.
+
+## Smoothing Splines
+
+The function g that minimizes the following value is called smoothing splines, which makes RSS small but also the regression line smooth.
+
+![](images/paste-E9BEF599.png)
+
+where $\lambda$ is nonnegative.
+
+If $\lambda \rightarrow \infty$, the regression line becomes a straight line.
+
+Smoothing splines is a shrunken version of a natural cubic spline with the region outside of the extreme knots perfectly linear.
+
+### Choosing the Smoothing Parameter $\lambda$
+
+Degrees of freedom: the number of free parameters
+
+Effective degrees of freedom $df_\lambda$: a measure of the flexibility of the smoothing spline.
+
+$$
+\hat{g}_\lambda = S_\lambda y
+$$
+
+$\hat{g}_\lambda$ indicates the fitted value of the smoothing spline.
+
+$S_\lambda$ is an n x n matrix.
+
+Then, the effective degrees of freedom is defined as
+
+$$
+df_\lambda = \sum_{i=1}^{n} \{S_\lambda\}_{ii}
+$$
+
+To choose $\lambda$, cross-validation works. Especially, LOOCV can be computed very efficiently for smoothing splines.
+
+![](images/paste-EFE3B0AB.png)
+
+$\hat{g}_\lambda ^{(-i)}(x_i)$ indicates the fitted value for the smoothing spline evaluated at $x_i$, where the fit uses all the training data except for the ith observation.
+
+## Local Regression
+
+Fit a target point $x_0$ using only the nearby training observations.
+
+-   Gather the fraction $s=k/n$ of training points whose $x_i$ are closest to $x_0$.
+
+-   Assign a weight $K_{i0} = K(x_i, x_0)$ to each point, so that the point furthest from $x_0$ has weight zero and the closest has the highest weight.
+
+-   Fit a weighted least squares regression:
+
+    -   ![](images/paste-419C3984.png)
+
+-   The fitted value at $x_0$ is give by $\hat{f}(x0) = \hat{\beta_0} + \hat{\beta_1} x_0$.
+
+The span s plays a significant role to determine smoothness. The larger s will lead to a global filt to the data using all of the training data.
+
+To choose s, cross-validation works.
+
+## Generalized Additive Models (GAM)
+
+Quantitive Regression
+
+![](images/paste-A69A339C.png)
+
+Qualitative Classification
+
+![](images/paste-D622FA3C.png)
+
+# Lab
+
+```{r}
+library(ISLR2)
+attach(Wage)
+```
+
+### Polynomial Regression
+
+```{r}
+fit <- lm(wage ~ poly(age , 4), data = Wage)
+coef(summary(fit))
+```
+
+The `poly` function returns a matrix whose columns are a basis of orthogonal polynomials, which essentially means that each column is a linear combination of the variables `age`, `age^2`, `age^3`, and `age^4`.
+
+```{r}
+fit2 <- lm(wage ~ poly(age , 4, raw = T), data = Wage)
+coef(summary(fit2))
+```
+
+```{r}
+fit2a <- lm(wage ~ age + I(age^2) + I(age^3) + I(age^4), data = Wage)
+coef(fit2a)
+```
+
+```{r}
+fit2b <- lm(wage ~ cbind(age , age^2, age^3, age^4), data = Wage)
+coef(fit2b)
+```
+
+```{r}
+agelims <- range(age)
+age.grid <- seq(from = agelims[1], to = agelims [2])
+preds <- predict(fit , newdata = list(age = age.grid), se = TRUE)
+se.bands <- cbind(preds$fit + 2 * preds$se.fit, preds$fit - 2 * preds$se.fit)
+```
+
+```{r}
+par(mfrow = c(1, 2), mar = c(4.5 , 4.5, 1, 1), oma = c(0, 0, 4, 0))
+plot(age , wage , xlim = agelims , cex = .5, col = "darkgrey")
+title("Degree -4 Polynomial", outer = T)
+lines(age.grid, preds$fit , lwd = 2, col = "blue")
+matlines(age.grid , se.bands, lwd = 1, col = "blue", lty = 3)
+```
+
+The predictions by `fit` and `fit2` are identical.
+
+```{r}
+preds2 <- predict(fit2 , newdata = list(age = age.grid), se = TRUE)
+max(abs(preds$fit - preds2$fit))
+```
+
+```{r}
+fit.1 <- lm(wage ~ age , data = Wage)
+fit.2 <- lm(wage ~ poly(age , 2), data = Wage)
+fit.3 <- lm(wage ~ poly(age , 3), data = Wage)
+fit.4 <- lm(wage ~ poly(age , 4), data = Wage)
+fit.5 <- lm(wage ~ poly(age , 5), data = Wage)
+anova(fit.1, fit.2, fit.3, fit.4, fit.5)
+```
+
+The cubic model `fit.3` seems the best.
+
+```{r}
+coef(summary(fit.5))
+```
+
+```{r}
+fit.1 <- lm(wage ~ education + age , data = Wage)
+fit.2 <- lm(wage ~ education + poly(age , 2), data = Wage)
+fit.3 <- lm(wage ~ education + poly(age , 3), data = Wage)
+anova(fit.1, fit.2, fit.3)
+```
+
+```{r}
+fit <- glm(I(wage > 250) ~ poly(age , 4), data = Wage, family = binomial)
+```
+
+```{r}
+preds <- predict(fit , newdata = list(age = age.grid), se = T)
+```
+
+```{r}
+pfit <- exp(preds$fit) / (1 + exp(preds$fit))
+se.bands.logit <- cbind(preds$fit + 2 * preds$se.fit, preds$fit - 2 * preds$se.fit)
+se.bands <- exp(se.bands.logit) / (1 + exp(se.bands.logit))
+```
+
+```{r}
+preds <- predict(fit , newdata = list(age = age.grid), type = "response", se = T)
+```
+
+```{r}
+plot(age , I(wage > 250), xlim = agelims , type = "n", ylim = c(0, .2))
+points(jitter(age), I(( wage > 250) / 5), cex = .5, pch = "|", col = "darkgrey")
+lines(age.grid, pfit , lwd = 2, col = "blue")
+matlines(age.grid , se.bands , lwd = 1, col = "blue", lty = 3)
+```
+
+### Step Functions
+
+```{r}
+table(cut(age , 4))
+fit <- lm(wage ~ cut(age , 4), data = Wage)
+coef(summary(fit))
+```
+
+```{r}
+library(splines)
+fit <- lm(wage ~ bs(age , knots = c(25, 40, 60)), data = Wage)
+pred <- predict(fit , newdata = list(age = age.grid), se = T)
+plot(age , wage , col = "gray")
+lines(age.grid, pred$fit , lwd = 2)
+lines(age.grid , pred$fit + 2 * pred$se, lty = "dashed")
+lines(age.grid , pred$fit - 2 * pred$se, lty = "dashed")
+```
+
+The `bs` function generates the entire matrix of **basis function for splines** with the specified set of knots.
+
+```{r}
+dim(bs(age , knots = c(25, 40, 60)))
+dim(bs(age , df = 6))
+attr(bs(age , df = 6), "knots")
+```
+
+```{r}
+fit2 <- lm(wage ~ ns(age , df = 4), data = Wage)
+pred2 <- predict(fit2 , newdata = list(age = age.grid), se = T)
+plot(age , wage , col = "gray")
+lines(age.grid , pred2$fit , col = "red", lwd = 2)
+```
+
+The `ns` function fits a **natural spline**.
+
+```{r}
+plot(age , wage , xlim = agelims , cex = .5, col = "darkgrey")
+title("Smoothing Spline")
+fit <- smooth.spline(age , wage , df = 16)
+fit2 <- smooth.spline(age , wage , cv = TRUE) # select the smoothness level by CV
+fit2$df
+lines(fit , col = "red", lwd = 2)
+lines(fit2 , col = "blue", lwd = 2)
+legend("topright", legend = c("16 DF", "6.8 DF"), col = c("red", "blue"), lty = 1, lwd = 2, cex = .8)
+```
+
+The `smooth.spline()` function fits **a smoothing spline**.
+
+```{r}
+plot(age , wage , xlim = agelims , cex = .5, col = "darkgrey")
+title("Local Regression")
+fit <- loess(wage ~ age , span = .2, data = Wage)
+fit2 <- loess(wage ~ age , span = .5, data = Wage)
+lines(age.grid, predict(fit , data.frame(age = age.grid)), col = "red", lwd = 2)
+lines(age.grid, predict(fit2 , data.frame(age = age.grid)), col = "blue", lwd = 2)
+legend("topright", legend = c("Span = 0.2", "Span = 0.5"), col = c("red", "blue"), lty = 1, lwd = 2, cex = .8)
+```
+
+The `loess()` function performs local regression.
+
+### GAM
+
+```{r}
+gam1 <- lm(wage ~ ns(year , 4) + ns(age , 5) + education , data = Wage)
+```
+
+```{r}
+library(gam)
+gam.m3 <- gam(wage ~ s(year , 4) + s(age , 5) + education , data = Wage)
+```
+
+The `s()` function indicates a smoothing spline.
+
+```{r}
+par(mfrow = c(1, 3))
+plot(gam.m3, se = TRUE , col = "blue")
+```
+
+```{r}
+plot.Gam(gam1 , se = TRUE , col = "red")
+```
+
+```{r}
+gam.m1 <- gam(wage ~ s(age , 5) + education , data = Wage)
+gam.m2 <- gam(wage ~ year + s(age , 5) + education , data = Wage)
+anova(gam.m1, gam.m2, gam.m3, test = "F")
+```
+
+`gam.m2` is preferred.
+
+```{r}
+summary(gam.m3)
+```
+
+```{r}
+preds <- predict(gam.m2, newdata = Wage)
+```
+
+```{r}
+gam.lo <- gam(
+  wage ~ s(year , df = 4) + lo(age , span = 0.7) + education ,
+  data = Wage
+  )
+plot.Gam(gam.lo, se = TRUE , col = "green")
+```
+
+The `lo()` function performs local regression.
+
+```{r}
+gam.lo.i <- gam(wage ~ lo(year , age , span = 0.5) + education , data = Wage)
+```
+
+`lo()` can also be used to create interactions.
+
+```{r}
+library(akima)
+plot(gam.lo.i)
+```
+
+```{r}
+gam.lr <- gam(
+  I(wage > 250) ~ year + s(age , df = 5) + education ,
+  family = binomial , data = Wage
+  )
+par(mfrow = c(1, 3))
+plot(gam.lr, se = T, col = "green")
+```
+
+```{r}
+table(education , I(wage > 250))
+```
+
+```{r}
+gam.lr.s <- gam(
+  I(wage > 250) ~ year + s(age , df = 5) + education ,
+  family = binomial , data = Wage ,
+  subset = (education != "1. < HS Grad")
+  )
+par(mfrow = c(1, 3))
+plot(gam.lr.s, se = T, col = "green")
+```

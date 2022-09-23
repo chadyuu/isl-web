@@ -22,6 +22,7 @@ website:
       - index.qmd
       - 5.resampling.qmd
       - 6.model-selection.qmd
+      - 7.beyond-linearity.qmd
       - 8.tree-based.qmd
 
 format:
