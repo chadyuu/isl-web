@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>isl_web - Chapter 12: Unsupervised Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">isl_web</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Chapter 12: Unsupervised Learning</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        <div class="sidebar-tools-collapse">
+    <a href="" title="" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-github"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-collapse-item" href="https://github.com/chadyuu/isl-web/">
+          Source Code
+          </a>
+        </li>
+    </ul>
+</div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">An Introduction to Statistical Learning</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./5.resampling.html" class="sidebar-item-text sidebar-link">Chapter 5: Resampling Methods</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./6.model-selection.html" class="sidebar-item-text sidebar-link">Chapter 6: Linear Model Selection and Regularization</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./7.beyond-linearity.html" class="sidebar-item-text sidebar-link">Chapter 7: Moving Beyond Linearity</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./8.tree-based.html" class="sidebar-item-text sidebar-link">Chapter 8: Tree-Based Methods</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12.unsupervised.html" class="sidebar-item-text sidebar-link active">Chapter 12: Unsupervised Learning</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#principal-components-analysis" id="toc-principal-components-analysis" class="nav-link active" data-scroll-target="#principal-components-analysis">Principal Components Analysis</a>
+  <ul class="collapse">
+  <li><a href="#the-proportion-of-variance-explained-pve" id="toc-the-proportion-of-variance-explained-pve" class="nav-link" data-scroll-target="#the-proportion-of-variance-explained-pve">The Proportion of Variance Explained (PVE)</a></li>
+  <li><a href="#how-to-determine-the-number-of-principal-components" id="toc-how-to-determine-the-number-of-principal-components" class="nav-link" data-scroll-target="#how-to-determine-the-number-of-principal-components">How to determine the number of principal components</a></li>
+  </ul></li>
+  <li><a href="#missing-values-and-matrix-completion" id="toc-missing-values-and-matrix-completion" class="nav-link" data-scroll-target="#missing-values-and-matrix-completion">Missing Values and Matrix Completion</a></li>
+  <li><a href="#clustering-methods" id="toc-clustering-methods" class="nav-link" data-scroll-target="#clustering-methods">Clustering Methods</a>
+  <ul class="collapse">
+  <li><a href="#k-means-clustering" id="toc-k-means-clustering" class="nav-link" data-scroll-target="#k-means-clustering">K-Means Clustering</a></li>
+  <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">Hierarchical Clustering</a></li>
+  <li><a href="#practical-issues-in-clustering" id="toc-practical-issues-in-clustering" class="nav-link" data-scroll-target="#practical-issues-in-clustering">Practical Issues in Clustering</a></li>
+  </ul></li>
+  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab</a>
+  <ul class="collapse">
+  <li><a href="#principal-component-analysis" id="toc-principal-component-analysis" class="nav-link" data-scroll-target="#principal-component-analysis">Principal Component Analysis</a></li>
+  <li><a href="#matrix-completion" id="toc-matrix-completion" class="nav-link" data-scroll-target="#matrix-completion">Matrix Completion</a></li>
+  <li><a href="#k-means-clustering-1" id="toc-k-means-clustering-1" class="nav-link" data-scroll-target="#k-means-clustering-1">K-Means Clustering</a></li>
+  <li><a href="#hierarchical-clustering-1" id="toc-hierarchical-clustering-1" class="nav-link" data-scroll-target="#hierarchical-clustering-1">Hierarchical Clustering</a></li>
+  </ul></li>
+  <li><a href="#nci60-data-example" id="toc-nci60-data-example" class="nav-link" data-scroll-target="#nci60-data-example">NCI60 Data example</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Chapter 12: Unsupervised Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<ul>
+<li><p>principal components analysis</p></li>
+<li><p>clustering</p></li>
+</ul>
+<section id="principal-components-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="principal-components-analysis">Principal Components Analysis</h2>
+<p>PCA finds a low-dimensional representation of a data set that contains as much as possible of the variation.</p>
+<p>The first principal component is the normalized linear combination of the features with the largest variance:</p>
+<p><img src="images/paste-71ADE91C.png" class="img-fluid"></p>
+<p><span class="math inline">\(\phi\)</span> is the loading for each feature. <span class="math inline">\(\sum_{j=1}^{p} \phi_{j1} = 1\)</span> by normalized.</p>
+<p>Here is the procedure to calculate the first principal component.</p>
+<ol type="1">
+<li>Standardize X. (Make the mean of X equal 0 with standard deviation one.)
+<ol type="1">
+<li>Sometimes, we just center X without standardization for data with all the features in the same units.</li>
+</ol></li>
+<li><img src="images/paste-5AC2764F.png" class="img-fluid">
+<ol type="1">
+<li><p><span class="math inline">\(\sum_{j=1}^{p} \phi_{j1} x_{ij} = Z_1\)</span></p></li>
+<li><p>This problem can be solved via an eigen decomposition.</p></li>
+</ol></li>
+</ol>
+<p>Then, the second principal component is the linear combination of each feature with maximal variance out of all linear combinations that are uncorrelated with <span class="math inline">\(Z_1\)</span>, i.e., orthogonal to the direction <span class="math inline">\(\phi_1\)</span>.</p>
+<p><img src="images/paste-841EDEC5.png" class="img-fluid"></p>
+<section id="the-proportion-of-variance-explained-pve" class="level3">
+<h3 class="anchored" data-anchor-id="the-proportion-of-variance-explained-pve">The Proportion of Variance Explained (PVE)</h3>
+<p>The PVE of the mth principal component is defined as</p>
+<p><img src="images/paste-59E7CFF1.png" class="img-fluid"></p>
+<p>The variance o the data can be decomposed into the variance of the first M principal components plus the mean squared error of this M-dimensional approximation:</p>
+<p><img src="images/paste-6F42B149.png" class="img-fluid"></p>
+<p>The principal components can be equivalently viewed as minimizing the approximation error or maximizing the variance.</p>
+<p>The PVE also can be defined as :</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/paste-3C55662E.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">We can interpret the PVE as the <span class="math inline">\(R^2\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="how-to-determine-the-number-of-principal-components" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-determine-the-number-of-principal-components">How to determine the number of principal components</h3>
+<p>No simple answer. We can refer to a scree plot below and determine the number subjectively.</p>
+<p><img src="images/paste-D30BAE10.png" class="img-fluid"></p>
+<p>Only if we use PCA for regression, we can tune the number as parameter by cross-validation.</p>
+</section>
+</section>
+<section id="missing-values-and-matrix-completion" class="level2">
+<h2 class="anchored" data-anchor-id="missing-values-and-matrix-completion">Missing Values and Matrix Completion</h2>
+<p>Impute the missing values through matrix completion.</p>
+<ol type="1">
+<li>Create a complete data matrix as follows.
+<ol type="1">
+<li><p><img src="images/paste-05D1E8FB.png" class="img-fluid"></p></li>
+<li><p>where <span class="math inline">\(O\)</span> is the set of all observed pairs of indices (i,j).</p></li>
+</ol></li>
+<li>Repeat the following two steps until the objective <img src="images/paste-79F8ADB0.png" class="img-fluid" width="192"> fails to decrease.
+<ol type="1">
+<li><p>Solve</p>
+<ol type="1">
+<li><p><img src="images/paste-3FC906E2.png" class="img-fluid" width="280"></p></li>
+<li><p>For each element <span class="math inline">\((i,j) \notin O\)</span>, set <img src="images/paste-CA0BC925.png" width="146" height="29"> .</p></li>
+</ol></li>
+</ol></li>
+<li>Return the estimated missing entries.</li>
+</ol>
+<p>We can use this technique for recommender system where lot of missing values are in the customer and item rating matrix. For example, we can interpret the M components like this:</p>
+<ul>
+<li><p><span class="math inline">\(\hat{a}_{im}\)</span> represents the strength with which the ith user belongs to the mth clique.</p></li>
+<li><p><span class="math inline">\(\hat{b}_{jm}\)</span> represents the strength with which the jth movie belongs to the mth genre.</p></li>
+</ul>
+</section>
+<section id="clustering-methods" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-methods">Clustering Methods</h2>
+<ul>
+<li><p>K-means clustering: partition the observations into a pre-specified number of clusters.</p></li>
+<li><p>hierarchical clustering: not know in advance how many clusters we want. (Ended up with A tree-like visual representation called dendrogram.)</p></li>
+</ul>
+<section id="k-means-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="k-means-clustering">K-Means Clustering</h3>
+<ol type="1">
+<li>Standardize feature variables.</li>
+<li>Specify the desired number of clusters K.</li>
+<li>Assign each observation to one of the K clusters which minimizes the following value.
+<ol type="1">
+<li><p><img src="images/paste-F5348CD2.png" class="img-fluid" width="198"> where <span class="math inline">\(W(C_k)\)</span> represents the within-cluster variance.</p></li>
+<li><p>The most common way to calculate the within-cluster variance involves squared Euclidean distance:<img src="images/paste-9BEBD918.png" class="img-fluid" width="281"></p></li>
+<li><p>Randomly assign a number from 1 to K to each of the observations.</p></li>
+<li><p>Iterate until the cluster assignments stop changing to find a local optimum. (It is difficult to solve a global optimum though.)</p>
+<ol type="1">
+<li><p>Compute the cluster centroid for each cluster. (This is why it is called K-“Mean”s.)</p></li>
+<li><p>Assign each observation to the cluster whose centroid is closest.</p></li>
+</ol></li>
+</ol></li>
+<li>Reiterate procedure 2 to find a better local optimum, then pick the best one.</li>
+</ol>
+<p>The disadvantage of K-means is that we need to specify K.</p>
+</section>
+<section id="hierarchical-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-clustering">Hierarchical Clustering</h3>
+<p>It does not require to specify K in advance.</p>
+<ol type="1">
+<li>Standardize feature variables.</li>
+<li>Calculate all the pairwise dissimilarities.
+<ol type="1">
+<li><p>Euclidean distance</p></li>
+<li><p>Correlation-based distance (e.g., preferable for recommender system on E-commerce, where we want to cluster users with a similar preference regardless of the amount of past purchases.)</p></li>
+</ol></li>
+<li>For i = n, n-1, …,2:
+<ol type="1">
+<li><p>Fuse the pair of clusters with the least dissimilarity.</p></li>
+<li><p>Compute the new pairwise inter-cluster dissimilarities among the i-1 remaining clusters.</p></li>
+</ol></li>
+</ol>
+<p><img src="images/paste-9D9637AC.png" class="img-fluid"></p>
+<p>The vertical height indicates how close clusters are. We can determine the cutting height to generate arbitrary number of clusters.</p>
+<p>There are four types of linkage to measure dissimilarity.</p>
+<ul>
+<li><p>Complete: maximal inter-cluster dissimilarity.</p></li>
+<li><p>Single: minimal inter-cluster dissimilarity.</p></li>
+<li><p>Average: mean inter-cluster dissimilarity.</p></li>
+<li><p>Centroid: dissimilarity between the centroid for cluster A and B.</p></li>
+</ul>
+<p>Generally, we prefer Average and Complete to Single. Centroid is often used in genomics, but suffers from a major drawback of an inversion.</p>
+</section>
+<section id="practical-issues-in-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="practical-issues-in-clustering">Practical Issues in Clustering</h3>
+<ol type="1">
+<li>Small Decisions with Big Consequences
+<ol type="1">
+<li><p>each choice of parameters has a significant impact on the result, e.g., standardize?, dissimilarity measure, linkage, the number of K.</p></li>
+<li><p>So try various parameters and see the results.</p></li>
+</ol></li>
+<li>Validating the Clusters Obtained
+<ol type="1">
+<li>difficult to validate the clustering results.</li>
+</ol></li>
+<li>Clusters can be heavily distorted by outliers.</li>
+</ol>
+</section>
+</section>
+<section id="lab" class="level2">
+<h2 class="anchored" data-anchor-id="lab">Lab</h2>
+<section id="principal-component-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="principal-component-analysis">Principal Component Analysis</h3>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-1_21426ef366bbfc8c38338fba4ae9704b">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>states <span class="ot">&lt;-</span> <span class="fu">row.names</span>(USArrests)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>states</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Alabama"        "Alaska"         "Arizona"        "Arkansas"      
+ [5] "California"     "Colorado"       "Connecticut"    "Delaware"      
+ [9] "Florida"        "Georgia"        "Hawaii"         "Idaho"         
+[13] "Illinois"       "Indiana"        "Iowa"           "Kansas"        
+[17] "Kentucky"       "Louisiana"      "Maine"          "Maryland"      
+[21] "Massachusetts"  "Michigan"       "Minnesota"      "Mississippi"   
+[25] "Missouri"       "Montana"        "Nebraska"       "Nevada"        
+[29] "New Hampshire"  "New Jersey"     "New Mexico"     "New York"      
+[33] "North Carolina" "North Dakota"   "Ohio"           "Oklahoma"      
+[37] "Oregon"         "Pennsylvania"   "Rhode Island"   "South Carolina"
+[41] "South Dakota"   "Tennessee"      "Texas"          "Utah"          
+[45] "Vermont"        "Virginia"       "Washington"     "West Virginia" 
+[49] "Wisconsin"      "Wyoming"       </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-2_5ab6d16bf47069798c2ac38fcae3311a">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(USArrests)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Murder"   "Assault"  "UrbanPop" "Rape"    </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-3_d9e03059c7f25ad5c0c8c3d91872fc70">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(USArrests, <span class="dv">2</span>, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Murder  Assault UrbanPop     Rape 
+   7.788  170.760   65.540   21.232 </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-4_4f32d26d8867255a0e774e2901950fcd">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(USArrests, <span class="dv">2</span>, var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Murder    Assault   UrbanPop       Rape 
+  18.97047 6945.16571  209.51878   87.72916 </code></pre>
+</div>
+</div>
+<p>Use <code>prcomp</code> to perform PCA. <code>scale = TRUE</code> enables standardization.</p>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-5_940790201415d9de40b07d2c892a7975">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(USArrests , <span class="at">scale =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-6_00dd40def1bdd2e4d3de6e646cda62ee">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sdev"     "rotation" "center"   "scale"    "x"       </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-7_d5949700f1e1792f9d5655f0c69e37fa">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>center</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Murder  Assault UrbanPop     Rape 
+   7.788  170.760   65.540   21.232 </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-8_5e39c895265c4862889f298c70648654">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>scale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Murder   Assault  UrbanPop      Rape 
+ 4.355510 83.337661 14.474763  9.366385 </code></pre>
+</div>
+</div>
+<p><code>rotation</code> indicates the loading vectors.</p>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-9_de908e2530b4ad29f29233f11feac466">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>rotation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                PC1        PC2        PC3         PC4
+Murder   -0.5358995  0.4181809 -0.3412327  0.64922780
+Assault  -0.5831836  0.1879856 -0.2681484 -0.74340748
+UrbanPop -0.2781909 -0.8728062 -0.3780158  0.13387773
+Rape     -0.5434321 -0.1673186  0.8177779  0.08902432</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-10_bab719b50c141b7c093b6067eed86c78">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(USArrests)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 50  4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pr.out<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 50  4</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-11_449a8304976f7f3193c080da38e5a07c">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(USArrests)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           Murder Assault UrbanPop Rape
+Alabama      13.2     236       58 21.2
+Alaska       10.0     263       48 44.5
+Arizona       8.1     294       80 31.0
+Arkansas      8.8     190       50 19.5
+California    9.0     276       91 40.6
+Colorado      7.9     204       78 38.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pr.out<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  PC1        PC2         PC3          PC4
+Alabama    -0.9756604  1.1220012 -0.43980366  0.154696581
+Alaska     -1.9305379  1.0624269  2.01950027 -0.434175454
+Arizona    -1.7454429 -0.7384595  0.05423025 -0.826264240
+Arkansas    0.1399989  1.1085423  0.11342217 -0.180973554
+California -2.4986128 -1.5274267  0.59254100 -0.338559240
+Colorado   -1.4993407 -0.9776297  1.08400162  0.001450164</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-12_220bdc5c3900baf4b79bcf75a418e56d">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pr.out, <span class="at">scale =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The following image is a mirror of the one above.</p>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-13_3a9f4a3ebbe0ea3591569af1dd188965">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>rotation <span class="ot">=</span> <span class="sc">-</span>pr.out<span class="sc">$</span>rotation</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>x <span class="ot">=</span> <span class="sc">-</span>pr.out<span class="sc">$</span>x</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pr.out , <span class="at">scale =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-14_2ed1d5e024aa545c5d7cf480b72a4e39">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pr.out<span class="sc">$</span>sdev <span class="co"># sd of each principal component</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.5748783 0.9948694 0.5971291 0.4164494</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-15_fe20faa226b533e3b220ec167c2eab82">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>pr.var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.4802416 0.9897652 0.3565632 0.1734301</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-16_7fe075b6b5ed2b2e29000612e02e9646">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var <span class="sc">/</span> <span class="fu">sum</span>(pr.var)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>pve</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.62006039 0.24744129 0.08914080 0.04335752</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-17_db6ddb53b11d63d37aa3187e4a3e4a96">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve , <span class="at">xlab =</span> <span class="st">"Principal Component"</span>, <span class="at">ylab =</span> <span class="st">"Proportion of Variance Explained"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">type =</span> <span class="st">"b"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">xlab =</span> <span class="st">"Principal Component"</span>, <span class="at">ylab =</span> <span class="st">"Cumulative Proportion of Variance Explained"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">type =</span> <span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="matrix-completion" class="level3">
+<h3 class="anchored" data-anchor-id="matrix-completion">Matrix Completion</h3>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-18_8960463ae8df701a7d6c009f2ef7653a">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">data.matrix</span>(<span class="fu">scale</span>(USArrests)) <span class="co"># standardization</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>pcob <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pcob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2     PC3     PC4
+Standard deviation     1.5749 0.9949 0.59713 0.41645
+Proportion of Variance 0.6201 0.2474 0.08914 0.04336
+Cumulative Proportion  0.6201 0.8675 0.95664 1.00000</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-19_91086e6e3e78c0dc9b8fa9ebf9b1c482">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sX <span class="ot">=</span> <span class="fu">svd</span>(X) <span class="co"># the singular value decomposition (SVD)</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(sX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "d" "u" "v"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(sX<span class="sc">$</span>v, <span class="dv">3</span>) <span class="co"># The matrix v is equivalent to the loading matrix from principal components.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       [,1]   [,2]   [,3]   [,4]
+[1,] -0.536  0.418 -0.341  0.649
+[2,] -0.583  0.188 -0.268 -0.743
+[3,] -0.278 -0.873 -0.378  0.134
+[4,] -0.543 -0.167  0.818  0.089</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-20_211d76d0128fe3b4d93f232c86f97582">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pcob<span class="sc">$</span>rotation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                PC1        PC2        PC3         PC4
+Murder   -0.5358995  0.4181809 -0.3412327  0.64922780
+Assault  -0.5831836  0.1879856 -0.2681484 -0.74340748
+UrbanPop -0.2781909 -0.8728062 -0.3780158  0.13387773
+Rape     -0.5434321 -0.1673186  0.8177779  0.08902432</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-21_b4491c23a11595618fddfd0b9ee7f679">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(sX<span class="sc">$</span>d <span class="sc">*</span> <span class="fu">t</span>(sX<span class="sc">$</span>u)) <span class="co"># the matrix u is the matrix o standardized scores. the vecor d is the standard deviaitons.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]        [,2]        [,3]         [,4]
+ [1,] -0.97566045  1.12200121 -0.43980366  0.154696581
+ [2,] -1.93053788  1.06242692  2.01950027 -0.434175454
+ [3,] -1.74544285 -0.73845954  0.05423025 -0.826264240
+ [4,]  0.13999894  1.10854226  0.11342217 -0.180973554
+ [5,] -2.49861285 -1.52742672  0.59254100 -0.338559240
+ [6,] -1.49934074 -0.97762966  1.08400162  0.001450164
+ [7,]  1.34499236 -1.07798362 -0.63679250 -0.117278736
+ [8,] -0.04722981 -0.32208890 -0.71141032 -0.873113315
+ [9,] -2.98275967  0.03883425 -0.57103206 -0.095317042
+[10,] -1.62280742  1.26608838 -0.33901818  1.065974459
+[11,]  0.90348448 -1.55467609  0.05027151  0.893733198
+[12,]  1.62331903  0.20885253  0.25719021 -0.494087852
+[13,] -1.36505197 -0.67498834 -0.67068647 -0.120794916
+[14,]  0.50038122 -0.15003926  0.22576277  0.420397595
+[15,]  2.23099579 -0.10300828  0.16291036  0.017379470
+[16,]  0.78887206 -0.26744941  0.02529648  0.204421034
+[17,]  0.74331256  0.94880748 -0.02808429  0.663817237
+[18,] -1.54909076  0.86230011 -0.77560598  0.450157791
+[19,]  2.37274014  0.37260865 -0.06502225 -0.327138529
+[20,] -1.74564663  0.42335704 -0.15566968 -0.553450589
+[21,]  0.48128007 -1.45967706 -0.60337172 -0.177793902
+[22,] -2.08725025 -0.15383500  0.38100046  0.101343128
+[23,]  1.67566951 -0.62590670  0.15153200  0.066640316
+[24,] -0.98647919  2.36973712 -0.73336290  0.213342049
+[25,] -0.68978426 -0.26070794  0.37365033  0.223554811
+[26,]  1.17353751  0.53147851  0.24440796  0.122498555
+[27,]  1.25291625 -0.19200440  0.17380930  0.015733156
+[28,] -2.84550542 -0.76780502  1.15168793  0.311354436
+[29,]  2.35995585 -0.01790055  0.03648498 -0.032804291
+[30,] -0.17974128 -1.43493745 -0.75677041  0.240936580
+[31,] -1.96012351  0.14141308  0.18184598 -0.336121113
+[32,] -1.66566662 -0.81491072 -0.63661186 -0.013348844
+[33,] -1.11208808  2.20561081 -0.85489245 -0.944789648
+[34,]  2.96215223  0.59309738  0.29824930 -0.251434626
+[35,]  0.22369436 -0.73477837 -0.03082616  0.469152817
+[36,]  0.30864928 -0.28496113 -0.01515592  0.010228476
+[37,] -0.05852787 -0.53596999  0.93038718 -0.235390872
+[38,]  0.87948680 -0.56536050 -0.39660218  0.355452378
+[39,]  0.85509072 -1.47698328 -1.35617705 -0.607402746
+[40,] -1.30744986  1.91397297 -0.29751723 -0.130145378
+[41,]  1.96779669  0.81506822  0.38538073 -0.108470512
+[42,] -0.98969377  0.85160534  0.18619262  0.646302674
+[43,] -1.34151838 -0.40833518 -0.48712332  0.636731051
+[44,]  0.54503180 -1.45671524  0.29077592 -0.081486749
+[45,]  2.77325613  1.38819435  0.83280797 -0.143433697
+[46,]  0.09536670  0.19772785  0.01159482  0.209246429
+[47,]  0.21472339 -0.96037394  0.61859067 -0.218628161
+[48,]  2.08739306  1.41052627  0.10372163  0.130583080
+[49,]  2.05881199 -0.60512507 -0.13746933  0.182253407
+[50,]  0.62310061  0.31778662 -0.23824049 -0.164976866</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-22_19ff8f054aad4b0f4738ad53166884f8">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>pcob<span class="sc">$</span>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       PC1         PC2         PC3          PC4
+Alabama        -0.97566045  1.12200121 -0.43980366  0.154696581
+Alaska         -1.93053788  1.06242692  2.01950027 -0.434175454
+Arizona        -1.74544285 -0.73845954  0.05423025 -0.826264240
+Arkansas        0.13999894  1.10854226  0.11342217 -0.180973554
+California     -2.49861285 -1.52742672  0.59254100 -0.338559240
+Colorado       -1.49934074 -0.97762966  1.08400162  0.001450164
+Connecticut     1.34499236 -1.07798362 -0.63679250 -0.117278736
+Delaware       -0.04722981 -0.32208890 -0.71141032 -0.873113315
+Florida        -2.98275967  0.03883425 -0.57103206 -0.095317042
+Georgia        -1.62280742  1.26608838 -0.33901818  1.065974459
+Hawaii          0.90348448 -1.55467609  0.05027151  0.893733198
+Idaho           1.62331903  0.20885253  0.25719021 -0.494087852
+Illinois       -1.36505197 -0.67498834 -0.67068647 -0.120794916
+Indiana         0.50038122 -0.15003926  0.22576277  0.420397595
+Iowa            2.23099579 -0.10300828  0.16291036  0.017379470
+Kansas          0.78887206 -0.26744941  0.02529648  0.204421034
+Kentucky        0.74331256  0.94880748 -0.02808429  0.663817237
+Louisiana      -1.54909076  0.86230011 -0.77560598  0.450157791
+Maine           2.37274014  0.37260865 -0.06502225 -0.327138529
+Maryland       -1.74564663  0.42335704 -0.15566968 -0.553450589
+Massachusetts   0.48128007 -1.45967706 -0.60337172 -0.177793902
+Michigan       -2.08725025 -0.15383500  0.38100046  0.101343128
+Minnesota       1.67566951 -0.62590670  0.15153200  0.066640316
+Mississippi    -0.98647919  2.36973712 -0.73336290  0.213342049
+Missouri       -0.68978426 -0.26070794  0.37365033  0.223554811
+Montana         1.17353751  0.53147851  0.24440796  0.122498555
+Nebraska        1.25291625 -0.19200440  0.17380930  0.015733156
+Nevada         -2.84550542 -0.76780502  1.15168793  0.311354436
+New Hampshire   2.35995585 -0.01790055  0.03648498 -0.032804291
+New Jersey     -0.17974128 -1.43493745 -0.75677041  0.240936580
+New Mexico     -1.96012351  0.14141308  0.18184598 -0.336121113
+New York       -1.66566662 -0.81491072 -0.63661186 -0.013348844
+North Carolina -1.11208808  2.20561081 -0.85489245 -0.944789648
+North Dakota    2.96215223  0.59309738  0.29824930 -0.251434626
+Ohio            0.22369436 -0.73477837 -0.03082616  0.469152817
+Oklahoma        0.30864928 -0.28496113 -0.01515592  0.010228476
+Oregon         -0.05852787 -0.53596999  0.93038718 -0.235390872
+Pennsylvania    0.87948680 -0.56536050 -0.39660218  0.355452378
+Rhode Island    0.85509072 -1.47698328 -1.35617705 -0.607402746
+South Carolina -1.30744986  1.91397297 -0.29751723 -0.130145378
+South Dakota    1.96779669  0.81506822  0.38538073 -0.108470512
+Tennessee      -0.98969377  0.85160534  0.18619262  0.646302674
+Texas          -1.34151838 -0.40833518 -0.48712332  0.636731051
+Utah            0.54503180 -1.45671524  0.29077592 -0.081486749
+Vermont         2.77325613  1.38819435  0.83280797 -0.143433697
+Virginia        0.09536670  0.19772785  0.01159482  0.209246429
+Washington      0.21472339 -0.96037394  0.61859067 -0.218628161
+West Virginia   2.08739306  1.41052627  0.10372163  0.130583080
+Wisconsin       2.05881199 -0.60512507 -0.13746933  0.182253407
+Wyoming         0.62310061  0.31778662 -0.23824049 -0.164976866</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-23_68ad745c1d43e3ec1765cad150daf370">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>nomit <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">15</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>ina <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq</span> (<span class="dv">50</span>) , nomit)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>inb <span class="ot">&lt;-</span> <span class="fu">sample</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, nomit , <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>Xna <span class="ot">&lt;-</span> X</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>index.na <span class="ot">&lt;-</span> <span class="fu">cbind</span>(ina , inb)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>Xna[index.na] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-24_2422ee30cd2f5f7d6ec652e4dd52d5fa">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fit.svd <span class="ot">&lt;-</span> <span class="cf">function</span>(X, <span class="at">M =</span> <span class="dv">1</span>) { </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  svdob <span class="ot">&lt;-</span><span class="fu">svd</span>(X)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(svdob ,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    u[, <span class="dv">1</span><span class="sc">:</span>M, <span class="at">drop =</span> <span class="cn">FALSE</span>] <span class="sc">%*%</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    (d[<span class="dv">1</span><span class="sc">:</span>M] <span class="sc">*</span> <span class="fu">t</span>(v[, <span class="dv">1</span><span class="sc">:</span>M, <span class="at">drop =</span> <span class="cn">FALSE</span> ]))</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-25_fdbac4ddabb2d7f909235fd78a1cd1e0">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Xhat <span class="ot">&lt;-</span> Xna</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>xbar <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(Xna , <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>Xhat[index.na] <span class="ot">&lt;-</span> xbar[inb]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-26_dcbea82086cb92d75a65bd3375a9da81">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>thresh <span class="ot">&lt;-</span> <span class="fl">1e-7</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>rel_err <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>iter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>ismiss <span class="ot">&lt;-</span> <span class="fu">is.na</span>(Xna)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>mssold <span class="ot">&lt;-</span> <span class="fu">mean</span> (( <span class="fu">scale</span>(Xna , xbar , <span class="cn">FALSE</span>)[<span class="sc">!</span>ismiss])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>mss0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Xna[<span class="sc">!</span>ismiss ]<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-27_9e3048cc7f44a39b3ab4e0bf8659ba65">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span>(rel_err <span class="sc">&gt;</span> thresh) {</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  iter <span class="ot">&lt;-</span> iter <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 2(a)</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  Xapp <span class="ot">&lt;-</span> <span class="fu">fit.svd</span>(Xhat , <span class="at">M =</span> <span class="dv">1</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 2(b)</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  Xhat [ ismiss ] <span class="ot">&lt;-</span> Xapp [ ismiss ]</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 2(c)</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  mss <span class="ot">&lt;-</span> <span class="fu">mean</span> ((( Xna <span class="sc">-</span> Xapp)[<span class="sc">!</span> ismiss ])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  rel_err <span class="ot">&lt;-</span> ( mssold <span class="sc">-</span> mss ) <span class="sc">/</span> mss0</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  mssold <span class="ot">&lt;-</span> mss</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Iter:"</span>, iter, <span class="st">"MSS:"</span>, mss,</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Rel. Err:"</span>, rel_err, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iter: 1 MSS: 0.3821695 Rel. Err: 0.6194004 
+Iter: 2 MSS: 0.3705046 Rel. Err: 0.01161265 
+Iter: 3 MSS: 0.3692779 Rel. Err: 0.001221144 
+Iter: 4 MSS: 0.3691229 Rel. Err: 0.0001543015 
+Iter: 5 MSS: 0.3691008 Rel. Err: 2.199233e-05 
+Iter: 6 MSS: 0.3690974 Rel. Err: 3.376005e-06 
+Iter: 7 MSS: 0.3690969 Rel. Err: 5.465067e-07 
+Iter: 8 MSS: 0.3690968 Rel. Err: 9.253082e-08 </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-28_0ba6cf048b50ed4e0d2b08edce57bde5">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(Xapp[ismiss], X[ismiss])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6535043</code></pre>
+</div>
+</div>
+</section>
+<section id="k-means-clustering-1" class="level3">
+<h3 class="anchored" data-anchor-id="k-means-clustering-1">K-Means Clustering</h3>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-29_1ff8b52639b8d2c51dc00aebec8614fd">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">2</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span> (<span class="dv">50</span> <span class="sc">*</span> <span class="dv">2</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">1</span>] <span class="sc">+</span> <span class="dv">3</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">2</span>] <span class="ot">&lt;-</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>, <span class="dv">2</span>] <span class="sc">-</span> <span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-30_3c1d7235f72868e9eaaab93574eeacc9">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(x, <span class="dv">2</span>, <span class="at">nstart =</span> <span class="dv">20</span>) <span class="co"># nstart: how many random sets should be chosen (the number of iteratins)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-31_89f071bd35ff2c8f754d81a7b47b4c16">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>cluster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+[39] 2 2 2 2 2 2 2 2 2 2 2 2</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-32_b06e70386f249f1370a5060cbfeb2904">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> (km.out<span class="sc">$</span>cluster <span class="sc">+</span> <span class="dv">1</span>), </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"K-Means Clustering Results with K = 2"</span>, </span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-33_bbf69d2add3332db173af9c093c325a4">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">4</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(x, <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">20</span>)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>km.out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>K-means clustering with 3 clusters of sizes 17, 23, 10
+
+Cluster means:
+        [,1]        [,2]
+1  3.7789567 -4.56200798
+2 -0.3820397 -0.08740753
+3  2.3001545 -2.69622023
+
+Clustering vector:
+ [1] 1 3 1 3 1 1 1 3 1 3 1 3 1 3 1 3 1 1 1 1 1 3 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+[39] 2 2 2 2 2 3 2 3 2 2 2 2
+
+Within cluster sum of squares by cluster:
+[1] 25.74089 52.67700 19.56137
+ (between_SS / total_SS =  79.3 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
+[6] "betweenss"    "size"         "iter"         "ifault"      </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-34_5037dd134765b2b6f81da52bb7d47a5f">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> (km.out<span class="sc">$</span>cluster <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"K-Means Clustering Results with K = 3"</span>,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-35_7eda1308415567376d5392b9e1327206">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">4</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(x, <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">1</span>)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss <span class="co"># the total within-cluster sum of squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 104.3319</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(x, <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">20</span>)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 97.97927</code></pre>
+</div>
+</div>
+</section>
+<section id="hierarchical-clustering-1" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-clustering-1">Hierarchical Clustering</h3>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-36_7c632105155bc88b1b7cd772925637c5">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>hc.complete <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(x), <span class="at">method =</span> <span class="st">"complete"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>dist</code> computes the 50 x 50 inter-observation Euclidean distance matrix.</p>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-37_e6d43c50a5cd7de20cb999ff5ba3a020">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>hc.average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(x), <span class="at">method =</span> <span class="st">"average"</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>hc.single <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(x), <span class="at">method =</span> <span class="st">"single"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-38_41c26379607d9ef2087daafce935ce42">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete , <span class="at">main =</span> <span class="st">"Complete Linkage"</span>,</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">cex =</span> .<span class="dv">9</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.average , <span class="at">main =</span> <span class="st">"Average Linkage"</span>,</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">cex =</span> .<span class="dv">9</span>)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.single, <span class="at">main =</span> <span class="st">"Single Linkage"</span>,</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">cex =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-39_70f84e7574aa830542550e75f2aaa446">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cutree</span>(hc.complete , <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+[39] 2 2 2 2 2 2 2 2 2 2 2 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cutree</span>(hc.average , <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 1 2 2 2 2 2
+[39] 2 2 2 2 2 1 2 1 2 2 2 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cutree</span>(hc.single, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[39] 1 1 1 1 1 1 1 1 1 1 1 1</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-40_c664d64cb2518ddd6cc19e3b9af022cc">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>xsc <span class="ot">&lt;-</span> <span class="fu">scale</span>(x)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(<span class="fu">dist</span>(xsc), <span class="at">method =</span> <span class="st">"complete"</span>),</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Hierarchical Clustering with Scaled Features"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-41_84497f190261d66ee515acf29fb726a1">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span> (<span class="dv">30</span> <span class="sc">*</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">as.dist</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(<span class="fu">t</span>(x)))</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(dd, <span class="at">method =</span> <span class="st">"complete"</span>),</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Complete Linkage with Correlation -Based Distance"</span>,</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="nci60-data-example" class="level2">
+<h2 class="anchored" data-anchor-id="nci60-data-example">NCI60 Data example</h2>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-42_14363d98f4e0035d45359e32d097c1fb">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR2)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-43_805231fd7f8064b2199577f761d945b8">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data , <span class="at">scale =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-44_94263d73a22eb5cf8799fa5dfbf9bfc7">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>Cols <span class="ot">&lt;-</span> <span class="cf">function</span>(vec) {</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-45_bb440a7923dd92963132343259654a49">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col =</span> <span class="fu">Cols</span>(nci.labs), <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Z1"</span>, <span class="at">ylab =</span> <span class="st">"Z2"</span>)</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)], <span class="at">col =</span> <span class="fu">Cols</span>(nci.labs), <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Z1"</span>, <span class="at">ylab =</span> <span class="st">"Z3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-46_e9e0518f971af40aea446db96c0ac26b">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                           PC1      PC2      PC3      PC4      PC5      PC6
+Standard deviation     27.8535 21.48136 19.82046 17.03256 15.97181 15.72108
+Proportion of Variance  0.1136  0.06756  0.05752  0.04248  0.03735  0.03619
+Cumulative Proportion   0.1136  0.18115  0.23867  0.28115  0.31850  0.35468
+                            PC7      PC8      PC9     PC10     PC11     PC12
+Standard deviation     14.47145 13.54427 13.14400 12.73860 12.68672 12.15769
+Proportion of Variance  0.03066  0.02686  0.02529  0.02376  0.02357  0.02164
+Cumulative Proportion   0.38534  0.41220  0.43750  0.46126  0.48482  0.50646
+                           PC13     PC14     PC15     PC16     PC17     PC18
+Standard deviation     11.83019 11.62554 11.43779 11.00051 10.65666 10.48880
+Proportion of Variance  0.02049  0.01979  0.01915  0.01772  0.01663  0.01611
+Cumulative Proportion   0.52695  0.54674  0.56590  0.58361  0.60024  0.61635
+                           PC19    PC20     PC21    PC22    PC23    PC24
+Standard deviation     10.43518 10.3219 10.14608 10.0544 9.90265 9.64766
+Proportion of Variance  0.01594  0.0156  0.01507  0.0148 0.01436 0.01363
+Cumulative Proportion   0.63229  0.6479  0.66296  0.6778 0.69212 0.70575
+                          PC25    PC26    PC27   PC28    PC29    PC30    PC31
+Standard deviation     9.50764 9.33253 9.27320 9.0900 8.98117 8.75003 8.59962
+Proportion of Variance 0.01324 0.01275 0.01259 0.0121 0.01181 0.01121 0.01083
+Cumulative Proportion  0.71899 0.73174 0.74433 0.7564 0.76824 0.77945 0.79027
+                          PC32    PC33    PC34    PC35    PC36    PC37    PC38
+Standard deviation     8.44738 8.37305 8.21579 8.15731 7.97465 7.90446 7.82127
+Proportion of Variance 0.01045 0.01026 0.00988 0.00974 0.00931 0.00915 0.00896
+Cumulative Proportion  0.80072 0.81099 0.82087 0.83061 0.83992 0.84907 0.85803
+                          PC39    PC40    PC41   PC42    PC43   PC44    PC45
+Standard deviation     7.72156 7.58603 7.45619 7.3444 7.10449 7.0131 6.95839
+Proportion of Variance 0.00873 0.00843 0.00814 0.0079 0.00739 0.0072 0.00709
+Cumulative Proportion  0.86676 0.87518 0.88332 0.8912 0.89861 0.9058 0.91290
+                         PC46    PC47    PC48    PC49    PC50    PC51    PC52
+Standard deviation     6.8663 6.80744 6.64763 6.61607 6.40793 6.21984 6.20326
+Proportion of Variance 0.0069 0.00678 0.00647 0.00641 0.00601 0.00566 0.00563
+Cumulative Proportion  0.9198 0.92659 0.93306 0.93947 0.94548 0.95114 0.95678
+                          PC53    PC54    PC55    PC56    PC57   PC58    PC59
+Standard deviation     6.06706 5.91805 5.91233 5.73539 5.47261 5.2921 5.02117
+Proportion of Variance 0.00539 0.00513 0.00512 0.00482 0.00438 0.0041 0.00369
+Cumulative Proportion  0.96216 0.96729 0.97241 0.97723 0.98161 0.9857 0.98940
+                          PC60    PC61    PC62    PC63      PC64
+Standard deviation     4.68398 4.17567 4.08212 4.04124 2.148e-14
+Proportion of Variance 0.00321 0.00255 0.00244 0.00239 0.000e+00
+Cumulative Proportion  0.99262 0.99517 0.99761 1.00000 1.000e+00</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-47_d815d2799447537b7e6ef8f414552582">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-48_e53f43372b7cee17f6988a6389d49914">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(pr.out<span class="sc">$</span>sdev <span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve , <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">ylab =</span> <span class="st">"PVE"</span>,</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Principal Component"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">ylab =</span> <span class="st">"Cumulative PVE"</span>,</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Principal Component"</span>, <span class="at">col =</span> <span class="st">"brown3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-49_62b44741bad6696032b4d07972f9f16a">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>sd.data <span class="ot">&lt;-</span> <span class="fu">scale</span>(nci.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-50_bb6e94125ecbff8ede9a1fea5580daf6">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data)</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(data.dist), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>,</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> nci.labs , <span class="at">main =</span> <span class="st">"Complete Linkage"</span>)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(data.dist , <span class="at">method =</span> <span class="st">"average"</span>),</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> nci.labs , <span class="at">main =</span> <span class="st">"Average Linkage"</span>,</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">hclust</span>(data.dist , <span class="at">method =</span> <span class="st">"single"</span>),</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> nci.labs , <span class="at">main =</span> <span class="st">"Single Linkage"</span>,</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">sub =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-51_a9e86060b781e31304cd4b5aad13a24e">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>hc.out <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(sd.data))</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>hc.clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc.out , <span class="dv">4</span>)</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters , nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           nci.labs
+hc.clusters BREAST CNS COLON K562A-repro K562B-repro LEUKEMIA MCF7A-repro
+          1      2   3     2           0           0        0           0
+          2      3   2     0           0           0        0           0
+          3      0   0     0           1           1        6           0
+          4      2   0     5           0           0        0           1
+           nci.labs
+hc.clusters MCF7D-repro MELANOMA NSCLC OVARIAN PROSTATE RENAL UNKNOWN
+          1           0        8     8       6        2     8       1
+          2           0        0     1       0        0     1       0
+          3           0        0     0       0        0     0       0
+          4           1        0     0       0        0     0       0</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-52_1b15ea2cc582b07f95e3af65f92a2a1e">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.out , <span class="at">labels =</span> nci.labs)</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">139</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-53_68a0cfbd755f6a2e791a0f79ea7a7c13">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>hc.out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+hclust(d = dist(sd.data))
+
+Cluster method   : complete 
+Distance         : euclidean 
+Number of objects: 64 </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-54_49241b3223f36c0af99eb4f0372479bc">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">2</span>)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">4</span>, <span class="at">nstart =</span> <span class="dv">20</span>)</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>km.clusters <span class="ot">&lt;-</span> km.out<span class="sc">$</span>cluster</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(km.clusters , hc.clusters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           hc.clusters
+km.clusters  1  2  3  4
+          1 11  0  0  9
+          2 20  7  0  0
+          3  9  0  0  0
+          4  0  0  8  0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>hc.clusters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> V1  V2  V3  V4  V5  V6  V7  V8  V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 
+  1   1   1   1   2   2   2   2   1   1   1   1   1   1   1   1   1   2   2   2 
+V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38 V39 V40 
+  1   1   1   1   1   1   1   1   1   1   1   1   1   3   3   3   3   3   3   3 
+V41 V42 V43 V44 V45 V46 V47 V48 V49 V50 V51 V52 V53 V54 V55 V56 V57 V58 V59 V60 
+  3   1   4   1   4   4   4   4   4   4   4   4   1   1   1   1   1   1   1   1 
+V61 V62 V63 V64 
+  1   1   1   1 </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="12.unsupervised_cache/html/unnamed-chunk-55_ead35a20bebc2c1cede05e66cd6302d5">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>hc.out <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(pr.out<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]))</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.out , <span class="at">labels =</span> nci.labs ,</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Hier. Clust. on First Five Score Vectors"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="12.unsupervised_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">cutree</span>(hc.out , <span class="dv">4</span>), nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   nci.labs
+    BREAST CNS COLON K562A-repro K562B-repro LEUKEMIA MCF7A-repro MCF7D-repro
+  1      0   2     7           0           0        2           0           0
+  2      5   3     0           0           0        0           0           0
+  3      0   0     0           1           1        4           0           0
+  4      2   0     0           0           0        0           1           1
+   nci.labs
+    MELANOMA NSCLC OVARIAN PROSTATE RENAL UNKNOWN
+  1        1     8       5        2     7       0
+  2        7     1       1        0     2       1
+  3        0     0       0        0     0       0
+  4        0     0       0        0     0       0</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

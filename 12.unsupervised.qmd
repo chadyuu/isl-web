@@ -1,0 +1,491 @@
+---
+title: "Chapter 12: Unsupervised Learning"
+execute:
+  cache: true
+---
+
+-   principal components analysis
+
+-   clustering
+
+## Principal Components Analysis
+
+PCA finds a low-dimensional representation of a data set that contains as much as possible of the variation.
+
+The first principal component is the normalized linear combination of the features with the largest variance:
+
+![](images/paste-71ADE91C.png)
+
+$\phi$ is the loading for each feature. $\sum_{j=1}^{p} \phi_{j1} = 1$ by normalized.
+
+Here is the procedure to calculate the first principal component.
+
+1.  Standardize X. (Make the mean of X equal 0 with standard deviation one.)
+    1.  Sometimes, we just center X without standardization for data with all the features in the same units.
+2.  ![](images/paste-5AC2764F.png)
+    1.  $\sum_{j=1}^{p} \phi_{j1} x_{ij} = Z_1$
+
+    2.  This problem can be solved via an eigen decomposition.
+
+Then, the second principal component is the linear combination of each feature with maximal variance out of all linear combinations that are uncorrelated with $Z_1$, i.e., orthogonal to the direction $\phi_1$.
+
+![](images/paste-841EDEC5.png)
+
+### The Proportion of Variance Explained (PVE)
+
+The PVE of the mth principal component is defined as
+
+![](images/paste-59E7CFF1.png)
+
+The variance o the data can be decomposed into the variance of the first M principal components plus the mean squared error of this M-dimensional approximation:
+
+![](images/paste-6F42B149.png)
+
+The principal components can be equivalently viewed as minimizing the approximation error or maximizing the variance.
+
+The PVE also can be defined as :
+
+![We can interpret the PVE as the $R^2$.](images/paste-3C55662E.png)
+
+### How to determine the number of principal components
+
+No simple answer. We can refer to a scree plot below and determine the number subjectively.
+
+![](images/paste-D30BAE10.png)
+
+Only if we use PCA for regression, we can tune the number as parameter by cross-validation.
+
+## Missing Values and Matrix Completion
+
+Impute the missing values through matrix completion.
+
+1.  Create a complete data matrix as follows.
+    1.  ![](images/paste-05D1E8FB.png)
+
+    2.  where $O$ is the set of all observed pairs of indices (i,j).
+2.  Repeat the following two steps until the objective ![](images/paste-79F8ADB0.png){width="192"} fails to decrease.
+    1.  Solve
+
+        1.  ![](images/paste-3FC906E2.png){width="280"}
+
+        2.  For each element $(i,j) \notin O$, set ![](images/paste-CA0BC925.png){width="146" height="29"} .
+3.  Return the estimated missing entries.
+
+We can use this technique for recommender system where lot of missing values are in the customer and item rating matrix. For example, we can interpret the M components like this:
+
+-   $\hat{a}_{im}$ represents the strength with which the ith user belongs to the mth clique.
+
+-   $\hat{b}_{jm}$ represents the strength with which the jth movie belongs to the mth genre.
+
+## Clustering Methods
+
+-   K-means clustering: partition the observations into a pre-specified number of clusters.
+
+-   hierarchical clustering: not know in advance how many clusters we want. (Ended up with A tree-like visual representation called dendrogram.)
+
+### K-Means Clustering
+
+1.  Standardize feature variables.
+2.  Specify the desired number of clusters K.
+3.  Assign each observation to one of the K clusters which minimizes the following value.
+    1.  ![](images/paste-F5348CD2.png){width="198"} where $W(C_k)$ represents the within-cluster variance.
+
+    2.  The most common way to calculate the within-cluster variance involves squared Euclidean distance:![](images/paste-9BEBD918.png){width="281"}
+
+    3.  Randomly assign a number from 1 to K to each of the observations.
+
+    4.  Iterate until the cluster assignments stop changing to find a local optimum. (It is difficult to solve a global optimum though.)
+
+        1.  Compute the cluster centroid for each cluster. (This is why it is called K-"Mean"s.)
+
+        2.  Assign each observation to the cluster whose centroid is closest.
+4.  Reiterate procedure 2 to find a better local optimum, then pick the best one.
+
+The disadvantage of K-means is that we need to specify K.
+
+### Hierarchical Clustering
+
+It does not require to specify K in advance.
+
+1.  Standardize feature variables.
+2.  Calculate all the pairwise dissimilarities.
+    1.  Euclidean distance
+
+    2.  Correlation-based distance (e.g., preferable for recommender system on E-commerce, where we want to cluster users with a similar preference regardless of the amount of past purchases.)
+3.  For i = n, n-1, ...,2:
+    1.  Fuse the pair of clusters with the least dissimilarity.
+
+    2.  Compute the new pairwise inter-cluster dissimilarities among the i-1 remaining clusters.
+
+![](images/paste-9D9637AC.png)
+
+The vertical height indicates how close clusters are. We can determine the cutting height to generate arbitrary number of clusters.
+
+There are four types of linkage to measure dissimilarity.
+
+-   Complete: maximal inter-cluster dissimilarity.
+
+-   Single: minimal inter-cluster dissimilarity.
+
+-   Average: mean inter-cluster dissimilarity.
+
+-   Centroid: dissimilarity between the centroid for cluster A and B.
+
+Generally, we prefer Average and Complete to Single. Centroid is often used in genomics, but suffers from a major drawback of an inversion.
+
+### Practical Issues in Clustering
+
+1.  Small Decisions with Big Consequences
+    1.  each choice of parameters has a significant impact on the result, e.g., standardize?, dissimilarity measure, linkage, the number of K.
+
+    2.  So try various parameters and see the results.
+2.  Validating the Clusters Obtained
+    1.  difficult to validate the clustering results.
+3.  Clusters can be heavily distorted by outliers.
+
+## Lab
+
+### Principal Component Analysis
+
+```{r}
+states <- row.names(USArrests)
+states
+```
+
+```{r}
+names(USArrests)
+```
+
+```{r}
+apply(USArrests, 2, mean)
+```
+
+```{r}
+apply(USArrests, 2, var)
+```
+
+Use `prcomp` to perform PCA. `scale = TRUE` enables standardization.
+
+```{r}
+pr.out <- prcomp(USArrests , scale = TRUE)
+```
+
+```{r}
+names(pr.out)
+```
+
+```{r}
+pr.out$center
+```
+
+```{r}
+pr.out$scale
+```
+
+`rotation` indicates the loading vectors.
+
+```{r}
+pr.out$rotation
+```
+
+```{r}
+dim(USArrests)
+dim(pr.out$x)
+```
+
+```{r}
+head(USArrests)
+head(pr.out$x)
+```
+
+```{r}
+biplot(pr.out, scale = 0)
+```
+
+The following image is a mirror of the one above.
+
+```{r}
+pr.out$rotation = -pr.out$rotation
+pr.out$x = -pr.out$x
+biplot(pr.out , scale = 0)
+```
+
+```{r}
+pr.out$sdev # sd of each principal component
+```
+
+```{r}
+pr.var <- pr.out$sdev^2
+pr.var
+```
+
+```{r}
+pve <- pr.var / sum(pr.var)
+pve
+```
+
+```{r}
+par(mfrow = c(1, 2))
+plot(pve , xlab = "Principal Component", ylab = "Proportion of Variance Explained", ylim = c(0, 1), type = "b")
+plot(cumsum(pve), xlab = "Principal Component", ylab = "Cumulative Proportion of Variance Explained", ylim = c(0, 1), type = "b")
+```
+
+### Matrix Completion
+
+```{r}
+X <- data.matrix(scale(USArrests)) # standardization
+pcob <- prcomp(X)
+summary(pcob)
+```
+
+```{r}
+sX = svd(X) # the singular value decomposition (SVD)
+names(sX)
+round(sX$v, 3) # The matrix v is equivalent to the loading matrix from principal components.
+```
+
+```{r}
+pcob$rotation
+```
+
+```{r}
+t(sX$d * t(sX$u)) # the matrix u is the matrix o standardized scores. the vecor d is the standard deviaitons.
+```
+
+```{r}
+pcob$x
+```
+
+```{r}
+nomit <- 20
+set.seed (15)
+ina <- sample(seq (50) , nomit)
+inb <- sample (1:4, nomit , replace = TRUE)
+Xna <- X
+index.na <- cbind(ina , inb)
+Xna[index.na] <- NA
+```
+
+```{r}
+fit.svd <- function(X, M = 1) { 
+  svdob <-svd(X)
+  with(svdob ,
+    u[, 1:M, drop = FALSE] %*%
+    (d[1:M] * t(v[, 1:M, drop = FALSE ]))
+  )
+}
+```
+
+```{r}
+Xhat <- Xna
+xbar <- colMeans(Xna , na.rm = TRUE)
+Xhat[index.na] <- xbar[inb]
+```
+
+```{r}
+thresh <- 1e-7
+rel_err <- 1
+iter <- 0
+ismiss <- is.na(Xna)
+mssold <- mean (( scale(Xna , xbar , FALSE)[!ismiss])^2)
+mss0 <- mean(Xna[!ismiss ]^2)
+```
+
+```{r}
+while(rel_err > thresh) {
+  iter <- iter + 1
+  # Step 2(a)
+  Xapp <- fit.svd(Xhat , M = 1)
+  # Step 2(b)
+  Xhat [ ismiss ] <- Xapp [ ismiss ]
+  # Step 2(c)
+  mss <- mean ((( Xna - Xapp)[! ismiss ])^2)
+  rel_err <- ( mssold - mss ) / mss0
+  mssold <- mss
+  cat("Iter:", iter, "MSS:", mss,
+  "Rel. Err:", rel_err, "\n")
+}
+```
+
+```{r}
+cor(Xapp[ismiss], X[ismiss])
+```
+
+### K-Means Clustering
+
+```{r}
+set.seed (2)
+x <- matrix(rnorm (50 * 2), ncol = 2)
+x[1:25, 1] <- x[1:25, 1] + 3
+x[1:25, 2] <- x[1:25, 2] - 4
+```
+
+```{r}
+km.out <- kmeans(x, 2, nstart = 20) # nstart: how many random sets should be chosen (the number of iteratins)
+```
+
+```{r}
+km.out$cluster
+```
+
+```{r}
+par(mfrow = c(1, 2))
+plot(x, col = (km.out$cluster + 1), 
+     main = "K-Means Clustering Results with K = 2", 
+     xlab = "", ylab = "", pch = 20, cex = 2)
+```
+
+```{r}
+set.seed (4)
+km.out <- kmeans(x, 3, nstart = 20)
+km.out
+```
+
+```{r}
+plot(x, col = (km.out$cluster + 1),
+     main = "K-Means Clustering Results with K = 3",
+     xlab = "", ylab = "", pch = 20, cex = 2)
+```
+
+```{r}
+set.seed (4)
+km.out <- kmeans(x, 3, nstart = 1)
+km.out$tot.withinss # the total within-cluster sum of squares
+km.out <- kmeans(x, 3, nstart = 20)
+km.out$tot.withinss
+```
+
+### Hierarchical Clustering
+
+```{r}
+hc.complete <- hclust(dist(x), method = "complete")
+```
+
+`dist` computes the 50 x 50 inter-observation Euclidean distance matrix.
+
+```{r}
+hc.average <- hclust(dist(x), method = "average")
+hc.single <- hclust(dist(x), method = "single")
+```
+
+```{r}
+par(mfrow = c(1, 3))
+plot(hc.complete , main = "Complete Linkage",
+     xlab = "", sub = "", cex = .9)
+plot(hc.average , main = "Average Linkage",
+     xlab = "", sub = "", cex = .9)
+plot(hc.single, main = "Single Linkage",
+     xlab = "", sub = "", cex = .9)
+```
+
+```{r}
+cutree(hc.complete , 2)
+cutree(hc.average , 2)
+cutree(hc.single, 2)
+```
+
+```{r}
+xsc <- scale(x)
+plot(hclust(dist(xsc), method = "complete"),
+     main = "Hierarchical Clustering with Scaled Features")
+```
+
+```{r}
+x <- matrix(rnorm (30 * 3), ncol = 3)
+dd <- as.dist (1 - cor(t(x)))
+plot(hclust(dd, method = "complete"),
+     main = "Complete Linkage with Correlation -Based Distance",
+     xlab = "", sub = "")
+```
+
+## NCI60 Data example
+
+```{r}
+library(ISLR2)
+nci.labs <- NCI60$labs
+nci.data <- NCI60$data
+```
+
+```{r}
+pr.out <- prcomp(nci.data , scale = TRUE)
+```
+
+```{r}
+Cols <- function(vec) {
+  cols <-rainbow(length(unique(vec)))
+  return(cols[as.numeric(as.factor(vec))])
+}
+```
+
+```{r}
+par(mfrow = c(1, 2))
+plot(pr.out$x[, 1:2], col = Cols(nci.labs), pch = 19,
+     xlab = "Z1", ylab = "Z2")
+plot(pr.out$x[, c(1, 3)], col = Cols(nci.labs), pch = 19,
+     xlab = "Z1", ylab = "Z3")
+```
+
+```{r}
+summary(pr.out)
+```
+
+```{r}
+plot(pr.out)
+```
+
+```{r}
+pve <- 100 * pr.out$sdev^2 / sum(pr.out$sdev ^2)
+par(mfrow = c(1, 2))
+plot(pve , type = "o", ylab = "PVE",
+     xlab = "Principal Component", col = "blue")
+plot(cumsum(pve), type = "o", ylab = "Cumulative PVE",
+     xlab = "Principal Component", col = "brown3")
+```
+
+```{r}
+sd.data <- scale(nci.data)
+```
+
+```{r}
+par(mfrow = c(1, 3))
+data.dist <- dist(sd.data)
+plot(hclust(data.dist), xlab = "", sub = "", ylab = "",
+     labels = nci.labs , main = "Complete Linkage")
+plot(hclust(data.dist , method = "average"),
+     labels = nci.labs , main = "Average Linkage",
+     xlab = "", sub = "", ylab = "")
+plot(hclust(data.dist , method = "single"),
+     labels = nci.labs , main = "Single Linkage",
+     xlab = "", sub = "", ylab = "")
+```
+
+```{r}
+hc.out <- hclust(dist(sd.data))
+hc.clusters <- cutree(hc.out , 4)
+table(hc.clusters , nci.labs)
+```
+
+```{r}
+par(mfrow = c(1, 1))
+plot(hc.out , labels = nci.labs)
+abline(h = 139, col = "red")
+```
+
+```{r}
+hc.out
+```
+
+```{r}
+set.seed (2)
+km.out <- kmeans(sd.data, 4, nstart = 20)
+km.clusters <- km.out$cluster
+table(km.clusters , hc.clusters)
+hc.clusters
+```
+
+```{r}
+hc.out <- hclust(dist(pr.out$x[, 1:5]))
+plot(hc.out , labels = nci.labs ,
+     main = "Hier. Clust. on First Five Score Vectors")
+table(cutree(hc.out , 4), nci.labs)
+```
