@@ -20,6 +20,7 @@ website:
             url: https://github.com/chadyuu/isl-web/
     contents:
       - index.qmd
+      - 4.classification.qmd
       - 5.resampling.qmd
       - 6.model-selection.qmd
       - 7.beyond-linearity.qmd

@@ -133,6 +133,8 @@ There are four types of linkage to measure dissimilarity.
 
 Generally, we prefer Average and Complete to Single. Centroid is often used in genomics, but suffers from a major drawback of an inversion.
 
+Also note that hierarchical clustering stands on nested architecture, while K-means comprises parallel clusters. We should pay attention to whether the dataset can accept the nested architecture or not.
+
 ### Practical Issues in Clustering
 
 1.  Small Decisions with Big Consequences

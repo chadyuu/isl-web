@@ -1,0 +1,521 @@
+---
+title: "Chapter 4: Classification"
+execute:
+  cache: true
+---
+
+-   logistic regression
+
+-   linear discriminant analysis
+
+-   quadratic discriminant analysis
+
+-   naive Bayes
+
+-   K-nearest neighbors
+
+## Logistic Regression
+
+### Simple Logistic Regression
+
+![](images/paste-C694F9DA.png)
+
+![![](images/paste-FD6124B4.png)](images/paste-976B0134.png)
+
+The left-hand side is called the **log odds** or **logit**.
+
+Here is the likelihood function:
+
+![](images/paste-92EF709C.png)
+
+### Multiple Logistic Regression
+
+![](images/paste-DDE12E3A.png)
+
+### Multinomial Logistic Regression
+
+Set the baseline to the Kth class.
+
+![Then, for k = 1, ..., K-1,](images/paste-0E58EF89.png)
+
+![](images/paste-F352308B.png)
+
+Therefore,
+
+![](images/paste-DBB818DE.png)
+
+We can use an alternative coding, the **softmax** coding, without the baseline.
+
+![](images/paste-95DD396A.png)
+
+![](images/paste-9E7943BB.png)
+
+## Generative Models for Classification
+
+The advantages:
+
+-   Not suffer from the substantial separation between the two classes unlike logistic regression.
+
+-   More accurate when the distribution of predictors is approximately normal in each of the classes and the sample size is small.
+
+The Bayes' theorem states:
+
+![](images/paste-A27D86C3.png)
+
+There are three classifiers that use different estimates of $f_k(x)$.
+
+-   linear discriminant analysis
+
+-   quadratic discriminant analysis
+
+-   naive Bayes
+
+### Linear Discriminant Analysis (LDA) for p = 1
+
+Assume $f_k(x)$ is normal or Gaussian.
+
+![](images/paste-E56C3933.png)
+
+Then,
+
+![](images/paste-AAF88936.png)
+
+By taking the log, we find assigning the observations to the class (k) for which $\delta_k(x)$ is the largest.
+
+![](images/paste-8957CA78.png)
+
+The estimates are:
+
+![![](images/paste-DB8B127C.png)](images/paste-531FA85D.png)
+
+Then,
+
+![which are linear functions of x and the reason why this is called Linear Discriminant Analysis.](images/paste-F8BFBD57.png)
+
+### Linear Discriminant Analysis for p \> 1
+
+Assume X = (X1, X2, ..., Xp) is drawn from a multivariate Gaussian distribution.
+
+The multivariate Gaussian density is defined as
+
+![](images/paste-8A8BC8F0.png)
+
+where $Cov(X) = \sum$ is the p x p covariance matrix of X, that is common to all K classes.
+
+$$
+X \sim N(\mu_k, \Sigma)
+$$
+
+Then, assign an observation X=x to the class for which $\delta_k(x)$ is largest.
+
+### ROC Curve
+
+ROC (Receiver Operating Characteristics) curve displays the two types of errors (True positive rate / False positive rate) for all possible thresholds.
+
+![](images/paste-F4C313D7.png)
+
+### Quadratic Discriminant Analysis (QDA)
+
+Like LDA, assume the observations from each class are drawn from a Gaussian distribution.
+
+Unlike LDA, assume each class has its own covariance matrix.
+
+$$
+X \sim N(\mu_k, \Sigma_k)
+$$
+
+Then, the Bayes classifier assigns an observation X=x to the class for which $\delta_k(x)$ is the largest.
+
+![The reason why it is called quadratic DA is that x appears as a quadratic function.](images/paste-24D9B945.png)
+
+From this difference in variance, LDA with $Kp$ linear coefficients is much less flexible than QDA with $Kp(p+1)/2$ parameters. So LDA tends to fit better than QDA if there are relatively few training observations and so reducing variance is crucial.
+
+### Naive Bayes
+
+Assume the p predictors are independent within the $k$th class.
+
+![](images/paste-6E2F852E.png)
+
+Then,
+
+![](images/paste-359F6185.png)
+
+-   If $X_j$ is quantitative:
+
+    -   one option: assume ![](images/paste-A3E7042D.png){width="143"}, then calculate like QDA.
+
+    -   another option: use a non-parametric estimate for $k_{kj}$, such as
+
+        -   estimate based on the histogram bins for each class
+
+        -   a kernel density estimator, a smoothed version of a histogram.
+
+-   If $X_j$ is qualitative:
+
+    -   Estimate based on the proportion of training observations.
+
+Naive Bayes is preferable to LDA/QDA where p is larger or n is smaller because Naive Bayes can reduce variance.
+
+## A Comparison of Classification Methods
+
+-   LDA is a special case of QDA.
+
+-   Any classifier with a linear decision boundary, such as LDA, is a special case of naive Bayes.
+
+-   In any setting, the choice of method will depend on the true distribution of the predictors.
+
+-   LDA outperforms logistic regression when the normality assumption holds.
+
+-   KNN, completely non-parametric, can dominate LDA and logistic regression when the decision boundary is higly non-linear.
+
+-   KNN requires n \>\>p. If not n\>\>P, QDA outperforms KNN.
+
+-   KNN does not tell the significance of each predictor.
+
+## Generalized Linear Models
+
+Sometimes, we have to predict non-negative integers, such as the count of users.
+
+The prediction by linear regression ranges negative to positive, which is not preferable for this case.
+
+The log transformation of response variable can limit the range within positive, but cannot be 0.
+
+### Poisson Regression
+
+Here, Poisson Regression works well.
+
+Below is the Poisson distribution.
+
+![](images/paste-5DE9A930.png)
+
+$$
+\lambda = E(Y) = Var(Y)
+$$
+
+It is typically used to model counts.
+
+![](images/paste-1A4374A3.png)
+
+The likelihood takes the following form.
+
+![](images/paste-2B56A525.png)
+
+## Lab
+
+## Logistic Regression
+
+```{r}
+library(ISLR2)
+attach(Smarket)
+glm.fits <- glm(
+  Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume ,
+  data = Smarket , family = binomial
+)
+summary(glm.fits)
+```
+
+```{r}
+glm.probs <- predict(glm.fits , type = "response")
+glm.probs[1:10]
+```
+
+```{r}
+glm.pred <- rep("Down", 1250)
+glm.pred[glm.probs > .5] = "Up"
+table(glm.pred , Direction)
+```
+
+```{r}
+mean(glm.pred == Direction)
+```
+
+```{r}
+train <- (Year < 2005)
+Smarket.2005 <- Smarket[!train, ]
+dim(Smarket.2005)
+Direction.2005 <- Direction[!train]
+```
+
+```{r}
+glm.fits <- glm(
+  Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume ,
+  data = Smarket , family = binomial , subset = train
+)
+glm.probs <- predict(glm.fits , Smarket.2005, type = "response")
+```
+
+```{r}
+glm.pred <- rep("Down", 252)
+glm.pred[glm.probs > .5] <- "Up"
+table(glm.pred , Direction.2005)
+```
+
+```{r}
+mean(glm.pred == Direction.2005)
+mean(glm.pred != Direction.2005)
+```
+
+```{r}
+glm.fits <- glm(Direction ~ Lag1 + Lag2 , data = Smarket ,
+                family = binomial , subset = train)
+glm.probs <- predict(glm.fits , Smarket.2005, type = "response")
+glm.pred <- rep("Down", 252)
+glm.pred[glm.probs > .5] <- "Up"
+table(glm.pred , Direction.2005)
+```
+
+```{r}
+mean(glm.pred == Direction.2005)
+```
+
+```{r}
+predict(glm.fits,
+        newdata = data.frame(Lag1 = c(1.2 , 1.5) , Lag2 = c(1.1 , -0.8)),
+        type = "response"
+)
+```
+
+## Linear Discriminant Analysis
+
+```{r}
+library(MASS)
+lda.fit <- lda(Direction ~ Lag1 + Lag2 , data = Smarket ,subset = train)
+lda.fit
+```
+
+```{r}
+plot(lda.fit)
+```
+
+```{r}
+lda.pred <- predict(lda.fit , Smarket.2005)
+names(lda.pred)
+```
+
+```{r}
+lda.class <- lda.pred$class
+table(lda.class, Direction.2005)
+```
+
+```{r}
+mean(lda.class == Direction.2005)
+```
+
+```{r}
+sum(lda.pred$posterior[, 1] >= .5)
+```
+
+```{r}
+sum(lda.pred$posterior[, 1] < .5)
+```
+
+```{r}
+lda.pred$posterior[1:20, 1]
+lda.class[1:20]
+```
+
+```{r}
+sum(lda.pred$posterior[, 1] > .9)
+```
+
+### Quadratic Discriminant Analysis
+
+```{r}
+qda.fit <- qda(Direction ~ Lag1 + Lag2 , data = Smarket, subset = train)
+qda.fit
+```
+
+```{r}
+qda.class <- predict(qda.fit , Smarket.2005)$class
+table(qda.class , Direction.2005)
+```
+
+```{r}
+mean(qda.class == Direction.2005)
+```
+
+### Naive Bayes
+
+```{r}
+library(e1071)
+nb.fit <- naiveBayes(Direction ~ Lag1 + Lag2 , data = Smarket, subset = train)
+nb.fit
+```
+
+```{r}
+mean(Lag1[train][Direction[train] == "Down"])
+sd(Lag1[train][Direction[train] == "Down"])
+```
+
+```{r}
+nb.class <- predict(nb.fit , Smarket.2005)
+table(nb.class , Direction.2005)
+```
+
+```{r}
+nb.preds <- predict(nb.fit , Smarket.2005, type = "raw")
+nb.preds[1:5, ]
+```
+
+### K-Nearest Neighbors
+
+```{r}
+library(class)
+train.X <- cbind(Lag1 , Lag2)[train , ]
+test.X <- cbind(Lag1 , Lag2)[!train , ]
+train.Direction <- Direction[train]
+```
+
+```{r}
+set.seed (1)
+knn.pred <- knn(train.X, test.X, train.Direction , k = 1)
+table(knn.pred , Direction.2005)
+```
+
+```{r}
+knn.pred <- knn(train.X, test.X, train.Direction , k = 3)
+table(knn.pred , Direction.2005)
+```
+
+```{r}
+mean(knn.pred == Direction.2005)
+```
+
+```{r}
+attach(Caravan)
+```
+
+```{r}
+standardized.X <- scale(Caravan[, -86])
+var(Caravan[, 1])
+var(Caravan[, 2])
+var(standardized.X[, 1])
+var(standardized.X[, 2])
+```
+
+```{r}
+test <- 1:1000
+train.X <- standardized.X[-test, ]
+test.X <- standardized.X[test, ]
+train.Y <- Purchase[-test]
+test.Y <- Purchase[test]
+set.seed (1)
+knn.pred <- knn(train.X, test.X, train.Y, k = 1)
+mean(test.Y != knn.pred)
+```
+
+```{r}
+mean(test.Y != "No")
+```
+
+```{r}
+table(knn.pred , test.Y)
+```
+
+```{r}
+9 / (68 + 9)
+```
+
+```{r}
+knn.pred <- knn(train.X, test.X, train.Y, k = 3)
+table(knn.pred , test.Y)
+```
+
+```{r}
+5 / 26
+```
+
+```{r}
+knn.pred <- knn(train.X, test.X, train.Y, k = 5)
+table(knn.pred , test.Y)
+4 / 15
+```
+
+```{r}
+glm.fits <- glm(Purchase ~ ., data = Caravan , family = binomial , subset = -test) # logistic regression model
+glm.probs <- predict(glm.fits , Caravan[test , ], type = "response")
+glm.pred <- rep("No", 1000)
+glm.pred[glm.probs > .5] <- "Yes"
+table(glm.pred , test.Y)
+```
+
+```{r}
+glm.pred <- rep("No", 1000)
+glm.pred[glm.probs > .25] <- "Yes"
+table(glm.pred , test.Y)
+```
+
+```{r}
+11 / (22 + 11)
+```
+
+### Poisson Regression
+
+```{r}
+attach(Bikeshare)
+dim(Bikeshare)
+```
+
+```{r}
+mod.lm <- lm(
+  bikers ~ mnth + hr + workingday + temp + weathersit ,
+  data = Bikeshare
+)
+summary(mod.lm)
+```
+
+```{r}
+contrasts(Bikeshare$hr) = contr.sum(24)
+contrasts(Bikeshare$mnth) = contr.sum(12)
+mod.lm2 <- lm(
+  bikers ~ mnth + hr + workingday + temp + weathersit ,
+  data = Bikeshare
+)
+summary(mod.lm2)
+```
+
+```{r}
+sum(( predict(mod.lm) - predict(mod.lm2))^2)
+```
+
+```{r}
+all.equal(predict(mod.lm), predict(mod.lm2))
+```
+
+```{r}
+coef.months <- c(coef(mod.lm2)[2:12], -sum(coef(mod.lm2)[2:12]))
+```
+
+```{r}
+plot(coef.months , xlab = "Month", ylab = "Coefficient",
+     xaxt = "n", col = "blue", pch = 19, type = "o")
+axis(side = 1, at = 1:12, labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
+```
+
+```{r}
+coef.hours <- c(coef(mod.lm2)[13:35] , -sum(coef(mod.lm2)[13:35]))
+plot(coef.hours , xlab = "Hour", ylab = "Coefficient", col = "blue", pch = 19, type = "o")
+```
+
+```{r}
+mod.pois <- glm(
+  bikers ~ mnth + hr + workingday + temp + weathersit ,
+  data = Bikeshare , family = poisson
+  )
+summary(mod.pois)
+```
+
+```{r}
+coef.mnth <- c(coef(mod.pois)[2:12] , -sum(coef(mod.pois)[2:12]))
+plot(coef.mnth , xlab = "Month", ylab = "Coefficient",
+     xaxt = "n", col = "blue", pch = 19, type = "o")
+axis(side = 1, at = 1:12, labels = c("J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"))
+coef.hours <- c(coef(mod.pois)[13:35] , -sum(coef(mod.pois)[13:35]))
+plot(coef.hours , xlab = "Hour", ylab = "Coefficient",
+     col = "blue", pch = 19, type = "o")
+```
+
+```{r}
+plot(predict(mod.lm2), predict(mod.pois , type = "response"))
+abline (0, 1, col = 2, lwd = 3)
+```
