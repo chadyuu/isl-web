@@ -25,6 +25,7 @@ website:
       - 6.model-selection.qmd
       - 7.beyond-linearity.qmd
       - 8.tree-based.qmd
+      - 9.support-vector-machine.qmd
       - 12.unsupervised.qmd
 
 format:
