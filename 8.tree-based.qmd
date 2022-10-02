@@ -450,13 +450,7 @@ Check the range of parameters.
   interaction.depth = 4)
 ```
 
-`bag.fraction` should be greater than 0 and
-
-```{r}
- gbm(medv ~ ., data = Boston[train , ],
-  distribution = "gaussian", n.trees = 1,
-  interaction.depth = 4, bag.fraction = 0)
-```
+`bag.fraction` should be greater than 0.
 
 ```{r}
  gbm(medv ~ ., data = Boston[train , ],
