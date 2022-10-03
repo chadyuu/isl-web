@@ -1,7 +1,9 @@
 project:
   type: website
+  resources: 
+    - "googleb2e0c03b794578e2.html"
   output-dir: docs
-
+  
 website:
   title: "isl_web"
   navbar:
