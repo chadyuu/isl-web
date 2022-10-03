@@ -933,19 +933,70 @@ Equivalent Number of Parameters: 39.99
 Residual Standard Error: 0.3387 </code></pre>
 </div>
 </div>
+<p>Check the range of parameters.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-43_2da803c67a4eaa2cbba75bcb14eac4b9">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">1</span>,</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">interaction.depth =</span> <span class="dv">4</span>, <span class="at">shrinkage =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gbm(formula = medv ~ ., distribution = "gaussian", data = Boston[train, 
+    ], n.trees = 1, interaction.depth = 4, shrinkage = -1)
+A gradient boosted model with gaussian loss function.
+1 iterations were performed.
+There were 12 predictors of which 3 had non-zero influence.</code></pre>
+</div>
+</div>
+<p><code>n.trees</code> can be 1.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-44_e326fcce7bdd7ba3af80bd04356b5441">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">1</span>,</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">interaction.depth =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gbm(formula = medv ~ ., distribution = "gaussian", data = Boston[train, 
+    ], n.trees = 1, interaction.depth = 4)
+A gradient boosted model with gaussian loss function.
+1 iterations were performed.
+There were 12 predictors of which 2 had non-zero influence.</code></pre>
+</div>
+</div>
+<p><code>bag.fraction</code> should be greater than 0.</p>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-45_6a4470397eb048e8dae174f38798057c">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">1</span>,</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">interaction.depth =</span> <span class="dv">4</span>, <span class="at">bag.fraction =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gbm(formula = medv ~ ., distribution = "gaussian", data = Boston[train, 
+    ], n.trees = 1, interaction.depth = 4, bag.fraction = 1)
+A gradient boosted model with gaussian loss function.
+1 iterations were performed.
+There were 12 predictors of which 2 had non-zero influence.</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-46_8ea261e7186edc3e79851d66a655d03e">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">gbm</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston[train , ],</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">"gaussian"</span>, <span class="at">n.trees =</span> <span class="dv">1</span>,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">interaction.depth =</span> <span class="dv">4</span>, <span class="at">bag.fraction =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>gbm(formula = medv ~ ., distribution = "gaussian", data = Boston[train, 
+    ], n.trees = 1, interaction.depth = 4, bag.fraction = 100)
+A gradient boosted model with gaussian loss function.
+1 iterations were performed.
+There were 12 predictors of which 2 had non-zero influence.</code></pre>
+</div>
+</div>
 </section>
 <section id="bayesian-additive-regression-trees" class="level3">
 <h3 class="anchored" data-anchor-id="bayesian-additive-regression-trees">Bayesian Additive Regression Trees</h3>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-43_068205bc9fe238442749a0668aae8b07">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BART)</span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> Boston[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]</span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Boston[, <span class="st">"medv"</span>]</span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>xtrain <span class="ot">&lt;-</span> x[train, ]</span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>ytrain <span class="ot">&lt;-</span> y[train]</span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> x[<span class="sc">-</span>train, ]</span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> y[<span class="sc">-</span>train]</span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>bartfit <span class="ot">&lt;-</span> <span class="fu">gbart</span>(xtrain , ytrain , <span class="at">x.test =</span> xtest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-47_9376451b543c7a1c7fc54ffccba4a70c">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BART)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> Boston[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Boston[, <span class="st">"medv"</span>]</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>xtrain <span class="ot">&lt;-</span> x[train, ]</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>ytrain <span class="ot">&lt;-</span> y[train]</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>xtest <span class="ot">&lt;-</span> x[<span class="sc">-</span>train, ]</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>ytest <span class="ot">&lt;-</span> y[<span class="sc">-</span>train]</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span> (<span class="dv">1</span>)</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>bartfit <span class="ot">&lt;-</span> <span class="fu">gbart</span>(xtrain , ytrain , <span class="at">x.test =</span> xtest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>*****Calling gbart: type=1
 *****Data:
@@ -978,17 +1029,17 @@ time: 3s
 trcnt,tecnt: 1000,1000</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-44_e0bcb3b5b0b559e89edba6a84840b527">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>yhat.bart <span class="ot">&lt;-</span> bartfit<span class="sc">$</span>yhat.test.mean</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( ytest <span class="sc">-</span> yhat.bart)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-48_190ab5cb055b98c59d1f9a9e3b463bf8">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>yhat.bart <span class="ot">&lt;-</span> bartfit<span class="sc">$</span>yhat.test.mean</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span> (( ytest <span class="sc">-</span> yhat.bart)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.94718</code></pre>
 </div>
 </div>
 <p>We can check how many times each variable appeared in the collection of trees.</p>
-<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-45_21f2471de9a5fde087c1b88bbc2690d1">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(bartfit<span class="sc">$</span>varcount.mean , <span class="at">decreasing =</span> T)</span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>bartfit<span class="sc">$</span>varcount.mean[ord]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="8.tree-based_cache/html/unnamed-chunk-49_282db835435e742d37f00ee951f8fadc">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(bartfit<span class="sc">$</span>varcount.mean , <span class="at">decreasing =</span> T)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>bartfit<span class="sc">$</span>varcount.mean[ord]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    nox   lstat     tax     rad      rm   indus    chas ptratio     age      zn 
  22.952  21.329  21.250  20.781  19.890  19.825  19.051  18.976  18.274  15.952 
